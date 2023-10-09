@@ -6,18 +6,61 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="stylesheet" href="style.css" />
       <!-- <script src="main.js" defer></script> -->
-      <title>Expanses Tracker</title>
+      <title>Expenses Tracker</title>
    </head>
    <body>
       <div class="main-container">
          <div class="left-wrap">
             <div class="balance-wrap text-left leading-3">
-               <h1>0.00 EUR</h1>
-               <p class="text-sm font-normal">Balance</p>
+               <h1 class="text-3xl">0.00 EUR</h1>
+               <p class="small-txt">Balance</p>
             </div>
-            <div class="income-wrap flex border place-content-between">
-               <h2>Income</h2>
-               <h2>0.00 EUR</h2>
+            <div class="inc-exp-wrap">
+               <div class="income-wrap text-lime-500">
+                  <h2>0.00 EUR</h2>
+                  <p class="small-txt text-lime-600">Total income</p>
+               </div>
+               <div class="expenses-wrap text-rose-500">
+                  <h2>0.00 EUR</h2>
+                  <p class="small-txt text-rose-600">Total spent</p>
+               </div>
+            </div>
+            <div class="transaction-wrap">
+               <h2>Add Transactions</h2>
+               <div class="input">
+                  <label for="expenses" class="exp-label"
+                     >Select expenses category
+                  </label>
+
+                  <select name="expenses" id="exp-options" class="exp-options">
+                     <option>Housing</option>
+                     <option>Transportation</option>
+                     <option>Food</option>
+                     <option>Insurance</option>
+                     <option>Medical & Healthcare</option>
+                     <option>Saving, Investing, & Debt Payments</option>
+                     <option>Personal Spending</option>
+                     <option>Recreation & Entertainment</option>
+                     <option>Miscellaneous</option>
+                  </select>
+                  <label for="amount" class="exp-label"> Enter amount </label>
+                  <input
+                     type="number"
+                     placeholder="0"
+                     id="amount"
+                     class="exp-options"
+                  />
+                  <label for="date" class="exp-label"> Choose date </label>
+                  <input
+                  type="date"
+                  id="date"
+                  class="exp-options"
+               />
+
+                  <button class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 w-full mt-6">Submit</button>
+                     
+                  </button>
+               </div>
             </div>
          </div>
          <div class="right-wrap">

@@ -4,19 +4,19 @@
 
 .main-container {
    @apply container 
-          mt-10           
-          border
+          mt-10  
           container
           rounded 
-          border-indigo-600
+          /* border-indigo-600 */
           mx-auto 
-          bg-slate-50
-          p-8
+          shadow-lg
+          m-6
           font-sans
           text-xl
-          text-center
+          /* text-center */
           flex
-          gap-6;
+          gap-6
+          rounded-b-lg;
 }
 
 .left-wrap,
@@ -24,6 +24,53 @@
    @apply flex-1
    flex
    flex-col
-   border
-   gap-4;
+   p-6
+   /* border */
+   gap-6;
+}
+
+.left-wrap {
+   @apply border-r;
+}
+
+.inc-exp-wrap {
+   @apply flex
+   place-content-between;
+}
+
+.income-wrap,
+.expenses-wrap {
+   @apply bg-white 
+         flex         
+         /* flex-1 */
+         flex-col
+         shadow-lg
+         rounded-lg
+         p-4
+         place-content-between
+         text-left
+         gap-4;
+}
+
+.small-txt {
+   @apply text-xs 
+   font-normal;
+}
+
+/* inputs */
+.exp-options {
+   @apply p-1
+   border 
+   text-sm
+   w-full
+   rounded-lg
+   bg-zinc-50;
+}
+
+.exp-label {
+   @apply block
+   pt-3
+          mb-1
+          text-sm 
+          font-medium;
 }
