@@ -1,3 +1,29 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.main-container {
+   @apply container 
+          mt-10           
+          border
+          container
+          rounded 
+          border-indigo-600
+          mx-auto 
+          bg-slate-50
+          p-8
+          font-sans
+          text-xl
+          text-center
+          flex
+          gap-6;
+}
+
+.left-wrap,
+.right-wrap {
+   @apply flex-1
+   flex
+   flex-col
+   border
+   gap-4;
+}
