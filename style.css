@@ -79,12 +79,15 @@
    text-sm
    w-full
    rounded-lg
-   bg-zinc-50;
+   focus:outline-none
+   focus:border-sky-500
+   shadow-sm
+   bg-inherit;
 }
 
 .exp-label {
    @apply block
-   pt-3
+   pt-2
           mb-1
           text-sm 
           font-medium;
@@ -113,15 +116,14 @@
 }
 
 .icon {
-   @apply border
-   flex
+   @apply flex
    justify-center
    items-center
-   rounded-full
-   h-10
-   w-10
-   shadow-md
-   mr-4;
+   /* rounded-full */
+   p-3
+   /* shadow-md */
+   mr-4
+   border-r;
 }
 
 /* expense item color red*/
@@ -138,5 +140,9 @@
 
 .h-item {
    @apply flex 
-         items-center;
+         items-center
+         rounded
+         shadow-md
+         px-1
+         py-2;
 }

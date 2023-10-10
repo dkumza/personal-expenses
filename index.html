@@ -83,11 +83,7 @@
                      >Select expenses category
                   </label>
 
-                  <select
-                     name="expenses"
-                     id="exp-options"
-                     class="focus:outline-none exp-options focus:border-sky-500 shadow-sm"
-                  >
+                  <select name="expenses" class="exp-options">
                      <option>Housing</option>
                      <option>Transportation</option>
                      <option>Food</option>
@@ -104,14 +100,10 @@
                      type="number"
                      placeholder="0 "
                      id="amount"
-                     class="exp-options focus:outline-none focus:border-sky-500 shadow-sm"
+                     class="exp-options"
                   />
                   <label for="date" class="exp-label"> Choose date </label>
-                  <input
-                     type="date"
-                     id="date"
-                     class="exp-options focus:outline-none focus:border-sky-500 shadow-sm"
-                  />
+                  <input type="date" id="date" class="exp-options" />
 
                   <div class="btn-wrap flex w-full justify-center">
                      <button class="btn">Submit</button>
