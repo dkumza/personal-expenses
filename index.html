@@ -6,14 +6,19 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="stylesheet" href="style.css" />
       <!-- <script src="main.js" defer></script> -->
+      <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/datepicker.min.js"></script> -->
+      <link
+         rel="stylesheet"
+         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.min.css"
+      />
       <title>Expenses Tracker</title>
    </head>
    <body>
       <div class="main-container">
          <div class="left-wrap">
             <div class="balance-wrap text-left leading-3">
-               <h1 class="text-3xl">0.00 EUR</h1>
-               <p class="small-txt">Balance</p>
+               <h1 class="text-3xl">0</h1>
+               <p class="small-txt">€ Balance</p>
             </div>
             <div class="inc-exp-wrap">
                <div class="income-wrap text-lime-400">
@@ -22,10 +27,13 @@
                      <!-- <p class="small-txt">EUR</p> -->
                   </div>
                   <div class="income-small">
-                     <img class="object-contain" src="images/02-green.png" alt="">
-                     <p class="small-txt text-lime-400">Total income </p>
+                     <img
+                        class="object-contain"
+                        src="images/02-green.png"
+                        alt=""
+                     />
+                     <p class="small-txt text-lime-400">Total income</p>
                   </div>
-                  
                </div>
                <div class="expenses-wrap text-rose-400">
                   <div class="euros">
@@ -33,49 +41,82 @@
                      <!-- <p class="small-txt ">EUR</p> -->
                   </div>
                   <div class="income-small">
-                     <img class="object-contain" src="images/01-red.png" alt="">
+                     <img
+                        class="object-contain"
+                        src="images/01-red.png"
+                        alt=""
+                     />
                      <p class="small-txt text-rose-400">Total spent</p>
                   </div>
-                 
-                 
                </div>
             </div>
+            <!-- history container -->
+            <div class="history-wrap">
+               <h2>Transactions</h2>
+               <!-- history item -->
+               <ul class="history mt-2">
+                  <li class="h-item">
+                     <!-- icon -->
+                     <div class="icon">
+                        <i class="bi bi-house-down"></i>
+                     </div>
+                     <!-- category item -->
+                     <div class="category-item">
+                        <h3 class="text-base">Housing</h3>
+                        <p class="small-txt">Aug 20, 2023</p>
+                     </div>
+                     <div class="amount-item a-1">
+                        <h3>- 200</h3>
+                     </div>
+                     <div class="icon-del">
+                        <i class="bi bi-three-dots-vertical ml-1"></i>
+                     </div>
+                  </li>
+               </ul>
+            </div>
+            <!-- end of history container -->
+            <!-- new transactions container -->
             <div class="transaction-wrap">
                <h2>Add Transactions</h2>
-               <div class="input">
+               <form action="#" class="input">
                   <label for="expenses" class="exp-label"
                      >Select expenses category
                   </label>
 
-                  <select name="expenses" id="exp-options" class="exp-options">
+                  <select
+                     name="expenses"
+                     id="exp-options"
+                     class="focus:outline-none exp-options focus:border-sky-500 shadow-sm"
+                  >
                      <option>Housing</option>
                      <option>Transportation</option>
                      <option>Food</option>
                      <option>Insurance</option>
-                     <option>Medical & Healthcare</option>
-                     <option>Saving, Investing, & Debt Payments</option>
-                     <option>Personal Spending</option>
-                     <option>Recreation & Entertainment</option>
+                     <option>Healthcare</option>
+                     <option>Saving</option>
+                     <option>Personal</option>
+                     <option>Recreation</option>
                      <option>Miscellaneous</option>
                   </select>
+
                   <label for="amount" class="exp-label"> Enter amount </label>
                   <input
                      type="number"
-                     placeholder="0"
+                     placeholder="0 "
                      id="amount"
-                     class="exp-options"
+                     class="exp-options focus:outline-none focus:border-sky-500 shadow-sm"
                   />
                   <label for="date" class="exp-label"> Choose date </label>
                   <input
-                  type="date"
-                  id="date"
-                  class="exp-options"
-               />
+                     type="date"
+                     id="date"
+                     class="exp-options focus:outline-none focus:border-sky-500 shadow-sm"
+                  />
 
-                  <button class="btn ">Submit</button>
-                     
-                  </button>
-               </div>
+                  <div class="btn-wrap flex w-full justify-center">
+                     <button class="btn">Submit</button>
+                  </div>
+               </form>
             </div>
          </div>
          <div class="right-wrap">

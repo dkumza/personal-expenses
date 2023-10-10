@@ -3,6 +3,10 @@ module.exports = {
    content: ["*.{html,js}"],
    theme: {
       extend: {},
+      fontFamily: {
+         custom: ["Poppins", "sans-serif"],
+         // adding custom fonts
+      },
       screens: {
          // cutting out TWCSS default values
          sm: { min: "700px", max: "700px" },
