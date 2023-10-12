@@ -5,7 +5,10 @@
       <link rel="icon" type="image/svg+xml" href="/vite.svg" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="stylesheet" href="style.css" />
-      <!-- <script src="main.js" defer></script> -->
+      <!-- chart.js -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+
+      <script src="main.js" defer></script>
       <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/datepicker.min.js"></script> -->
       <link
          rel="stylesheet"
@@ -15,6 +18,82 @@
    </head>
    <body>
       <div class="main-container">
+            <!-- expanded history -->
+            <div class="add-blur hide"></div>
+         <div class="history-expanded hide">
+            <h2>Transactions</h2>
+            <!-- history item -->
+            <ul class="history mt-">
+               <li class="h-item">
+                  <!-- icon -->
+                  <div class="icon">
+                     <i class="bi bi-balloon-heart"></i>
+                  </div>
+                  <!-- category item -->
+                  <div class="category-item">
+                     <h3 class="text-base">Healthcare</h3>
+                     <p class="small-txt">Aug 20, 2023</p>
+                  </div>
+                  <div class="amount-item a-1">
+                     <h3>- 100</h3>
+                  </div>
+                  <div class="icon-del">
+                     <i class="bi bi-x-lg ml-1"></i>
+                  </div>
+               </li>
+               <li class="h-item">
+                  <!-- icon -->
+                  <div class="icon">
+                     <i class="bi bi-house-heart"></i>
+                  </div>
+                  <!-- category item -->
+                  <div class="category-item">
+                     <h3 class="text-base">Housing</h3>
+                     <p class="small-txt">Aug 20, 2023</p>
+                  </div>
+                  <div class="amount-item a-1">
+                     <h3>- 500</h3>
+                  </div>
+                  <div class="icon-del">
+                     <i class="bi bi-x-lg ml-1"></i>
+                  </div>
+               </li>
+               <li class="h-item">
+                  <!-- icon -->
+                  <div class="icon">
+                     <i class="bi bi-lightning-charge"></i>
+                  </div>
+                  <!-- category item -->
+                  <div class="category-item">
+                     <h3 class="text-base">Food</h3>
+                     <p class="small-txt">Aug 22, 2023</p>
+                  </div>
+                  <div class="amount-item a-1">
+                     <h3>- 200</h3>
+                  </div>
+                  <div class="icon-del">
+                     <i class="bi bi-x-lg ml-1"></i>
+                  </div>
+               </li>
+               <li class="h-item">
+                  <!-- icon -->
+                  <div class="icon">
+                     <i class="bi bi-cash-stack"></i>
+                  </div>
+                  <!-- category item -->
+                  <div class="category-item">
+                     <h3 class="text-base">Salary</h3>
+                     <p class="small-txt">Aug 7, 2023</p>
+                  </div>
+                  <div class="amount-item a-2">
+                     <h3>+ 4000</h3>
+                  </div>
+                  <div class="icon-del">
+                     <i class="bi bi-x-lg"></i>
+                  </div>
+               </li>
+            </ul>
+         </div>
          <div class="left-wrap">
             <div class="balance-wrap text-left leading-3">
                <h1 class="text-3xl">0</h1>
@@ -83,7 +162,7 @@
                         <p class="small-txt">Aug 20, 2023</p>
                      </div>
                      <div class="amount-item a-1">
-                        <h3>- 200</h3>
+                        <h3>- 500</h3>
                      </div>
                      <div class="icon-del">
                         <i class="bi bi-x-lg ml-1"></i>
@@ -92,7 +171,7 @@
                   <li class="h-item">
                      <!-- icon -->
                      <div class="icon">
-                        <i class="bi bi-battery-charging"></i>
+                        <i class="bi bi-lightning-charge"></i>
                      </div>
                      <!-- category item -->
                      <div class="category-item">
@@ -124,17 +203,18 @@
                      </div>
                   </li>
                </ul>
+               <!-- transaction history button -->
+               
             </div>
-            <!-- end of history container -->
-            <!-- add transaction button container -->
-            <!-- <div class="add-transaction-btn flex justify-end">
-               <button class="btn-add"><i class="bi bi-plus-lg"></i></button>
-            </div> -->
+            <div class="history-btn-wrap flex justify-end">
+               <button class="btn-history ">See more</button>
+            </div>
+         
             <div class="add-transaction-btn flex justify-center">
                <button class="btn">Add Transaction</i></button>
             </div>
             <!-- new transactions container -->
-            <div class="transaction-wrap mt-6 hide">
+            <div class="transaction-wrap mt-6">
                <h2>Add Transactions</h2>
                <form action="#" class="input">
                   <label for="expenses" class="exp-label"
@@ -145,9 +225,8 @@
                      <option>Food</option>
                      <option>Healthcare</option>
                      <option>Housing</option>
-                     <option>Transportation</option>
                      <option>Salary</option>
-                     <option>Saving</option>
+                  
                   </select>
 
                   <label for="amount" class="exp-label"> Enter amount </label>
@@ -161,13 +240,17 @@
                   <input type="date" id="date" class="exp-options" />
 
                   <div class="btn-wrap flex w-full justify-center">
-                     <button class="btn">Submit</button>
+                     <button class="btn mt-4">Submit</button>
                   </div>
                </form>
             </div>
          </div>
          <div class="right-wrap">
-            <h1>RIGHT SIDE</h1>
+            <h1>STATISTICS</h1>
+            <div class="charts">
+               <canvas class="chart expenses" id="myChart" style="width:100%;max-width:600px"></canvas>
+               <canvas class="chart income" id="myChart1" style="width:100%;max-width:600px"></canvas>
+            </div>
          </div>
       </div>
    </body>
