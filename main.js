@@ -1,7 +1,7 @@
 // chart.js
 
 let xLabel = ["Food", "Healtcare", "Housing"];
-let yLabel = [200, 100, 500];
+let yLabel = [500, 100, 300];
 let barColors = [
    "rgb(255, 99, 132)", // Food
    "rgb(75, 192, 192)", // Healthcare

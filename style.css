@@ -223,3 +223,13 @@
    shadow
    shadow-blue-200;
 }
+
+.inc-w {
+   @apply flex
+   justify-between
+   border
+   p-4
+   rounded
+   shadow
+   shadow-blue-200;
+}
