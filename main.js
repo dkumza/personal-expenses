@@ -25,7 +25,7 @@ new Chart("myChart", {
       responsive: false,
       title: {
          display: true,
-         text: "Expanses",
+         //  text: "Expanses",
       },
       legend: {
          display: true,

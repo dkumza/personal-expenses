@@ -35,7 +35,7 @@
                      <p class="small-txt">Aug 20, 2023</p>
                   </div>
                   <div class="amount-item a-1">
-                     <h3>- 100</h3>
+                     <h3>- 100 EUR</h3>
                   </div>
                   <div class="icon-del">
                      <i class="bi bi-x-lg ml-1"></i>
@@ -52,7 +52,7 @@
                      <p class="small-txt">Aug 20, 2023</p>
                   </div>
                   <div class="amount-item a-1">
-                     <h3>- 500</h3>
+                     <h3>- 500 EUR</h3>
                   </div>
                   <div class="icon-del">
                      <i class="bi bi-x-lg ml-1"></i>
@@ -69,7 +69,7 @@
                      <p class="small-txt">Aug 22, 2023</p>
                   </div>
                   <div class="amount-item a-1">
-                     <h3>- 200</h3>
+                     <h3>- 200 EUR</h3>
                   </div>
                   <div class="icon-del">
                      <i class="bi bi-x-lg ml-1"></i>
@@ -86,7 +86,7 @@
                      <p class="small-txt">Aug 7, 2023</p>
                   </div>
                   <div class="amount-item a-2">
-                     <h3>+ 4000</h3>
+                     <h3>+ 4000 EUR</h3>
                   </div>
                   <div class="icon-del">
                      <i class="bi bi-x-lg"></i>
@@ -102,7 +102,7 @@
             <div class="inc-exp-wrap">
                <div class="income-wrap text-lime-400">
                   <div class="euros">
-                     <h2 class="">0</h2>
+                     <h2 class="">0 EUR</h2>
                      <!-- <p class="small-txt">EUR</p> -->
                   </div>
                   <div class="income-small">
@@ -116,7 +116,7 @@
                </div>
                <div class="expenses-wrap text-rose-400">
                   <div class="euros">
-                     <h2>0</h2>
+                     <h2>0 EUR</h2>
                      <!-- <p class="small-txt ">EUR</p> -->
                   </div>
                   <div class="income-small">
@@ -145,7 +145,7 @@
                         <p class="small-txt">Aug 20, 2023</p>
                      </div>
                      <div class="amount-item a-1">
-                        <h3>- 100</h3>
+                        <h3>- 100 EUR</h3>
                      </div>
                      <div class="icon-del">
                         <i class="bi bi-x-lg ml-1"></i>
@@ -162,7 +162,7 @@
                         <p class="small-txt">Aug 20, 2023</p>
                      </div>
                      <div class="amount-item a-1">
-                        <h3>- 500</h3>
+                        <h3>- 500 EUR</h3>
                      </div>
                      <div class="icon-del">
                         <i class="bi bi-x-lg ml-1"></i>
@@ -179,7 +179,7 @@
                         <p class="small-txt">Aug 22, 2023</p>
                      </div>
                      <div class="amount-item a-1">
-                        <h3>- 200</h3>
+                        <h3>- 200 EUR</h3>
                      </div>
                      <div class="icon-del">
                         <i class="bi bi-x-lg ml-1"></i>
@@ -196,7 +196,7 @@
                         <p class="small-txt">Aug 7, 2023</p>
                      </div>
                      <div class="amount-item a-2">
-                        <h3>+ 4000</h3>
+                        <h3>+ 4000 EUR</h3>
                      </div>
                      <div class="icon-del">
                         <i class="bi bi-x-lg"></i>
@@ -214,7 +214,7 @@
                <button class="btn">Add Transaction</i></button>
             </div>
             <!-- new transactions container -->
-            <div class="transaction-wrap mt-6">
+            <div class="transaction-wrap mt-6 hide">
                <h2>Add Transactions</h2>
                <form action="#" class="input">
                   <label for="expenses" class="exp-label"
@@ -246,10 +246,19 @@
             </div>
          </div>
          <div class="right-wrap">
-            <h1>STATISTICS</h1>
-            <div class="charts">
+            <h1 class="text-3xl">STATISTICS</h1>
+            <div class="right-small-1">
+               
+               <div class="charts chart">
+                  <div class="exp-w flex justify-between -mb-8">
+                  <h1>Expanses:</h1>
+                  <p>-300 EUR</p>
+               </div>
                <canvas class="chart expenses" id="myChart" style="width:100%;max-width:600px"></canvas>
-               <canvas class="chart income" id="myChart1" style="width:100%;max-width:600px"></canvas>
+            </div>
+            
+
+               <!-- <canvas class="chart income" id="myChart1" style="width:100%;max-width:600px"></canvas> -->
             </div>
          </div>
       </div>

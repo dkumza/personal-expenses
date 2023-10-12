@@ -22,7 +22,7 @@
           text-xl        
           text-gray-700
           flex
-          gap-6
+          /* gap-6 */
           rounded-b-lg
           relative;
 }
@@ -33,7 +33,9 @@
    flex
    flex-col
    p-6
-   gap-4;
+   gap-4
+   border
+   rounded;
 }
 
 .left-wrap {
@@ -214,9 +216,10 @@
    gap-4;
 }
 
-.chart {
+.right-small-1 {
    @apply border
    rounded
+   p-4
    shadow
-   shadow-blue-300/50;
+   shadow-blue-200;
 }
