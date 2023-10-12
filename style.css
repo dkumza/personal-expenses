@@ -185,7 +185,8 @@
    hover:font-semibold;
 }
 
-.history-expanded {
+.history-expanded,
+.add-transactions {
    @apply border
    rounded
    shadow-xl
