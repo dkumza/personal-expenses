@@ -13,88 +13,14 @@
    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/datepicker.min.js"></script> -->
    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" />
    <title>Expenses Tracker</title>
-  <script type="module" crossorigin src="/personal-expenses/assets/index-be856b1b.js"></script>
-  <link rel="stylesheet" href="/personal-expenses/assets/index-cfc264e9.css">
+  <script type="module" crossorigin src="/personal-expenses/assets/index-b21f0cb0.js"></script>
+  <link rel="stylesheet" href="/personal-expenses/assets/index-c41fb8b8.css">
 </head>
 
 <body>
    <div class="main-container">
-      <!-- expanded history -->
+      <!-- blur modal -->
       <div class="add-blur hide"></div>
-      <div class="history-expanded hide">
-         <h2>Transactions</h2>
-         <!-- history item -->
-         <ul class="history mt-">
-            <li class="h-item">
-               <!-- icon -->
-               <div class="icon">
-                  <i class="bi bi-balloon-heart"></i>
-               </div>
-               <!-- category item -->
-               <div class="category-item">
-                  <h3 class="text-base">Healthcare</h3>
-                  <p class="small-txt">Aug 20, 2023</p>
-               </div>
-               <div class="amount-item a-1">
-                  <h3>- 100 EUR</h3>
-               </div>
-               <div class="icon-del">
-                  <i class="bi bi-x-lg ml-1"></i>
-               </div>
-            </li>
-            <li class="h-item">
-               <!-- icon -->
-               <div class="icon">
-                  <i class="bi bi-house-heart"></i>
-               </div>
-               <!-- category item -->
-               <div class="category-item">
-                  <h3 class="text-base">Housing</h3>
-                  <p class="small-txt">Aug 20, 2023</p>
-               </div>
-               <div class="amount-item a-1">
-                  <h3>- 500 EUR</h3>
-               </div>
-               <div class="icon-del">
-                  <i class="bi bi-x-lg ml-1"></i>
-               </div>
-            </li>
-            <li class="h-item">
-               <!-- icon -->
-               <div class="icon">
-                  <i class="bi bi-lightning-charge"></i>
-               </div>
-               <!-- category item -->
-               <div class="category-item">
-                  <h3 class="text-base">Food</h3>
-                  <p class="small-txt">Aug 22, 2023</p>
-               </div>
-               <div class="amount-item a-1">
-                  <h3>- 200 EUR</h3>
-               </div>
-               <div class="icon-del">
-                  <i class="bi bi-x-lg ml-1"></i>
-               </div>
-            </li>
-            <li class="h-item">
-               <!-- icon -->
-               <div class="icon">
-                  <i class="bi bi-cash-stack"></i>
-               </div>
-               <!-- category item -->
-               <div class="category-item">
-                  <h3 class="text-base">Salary</h3>
-                  <p class="small-txt">Aug 7, 2023</p>
-               </div>
-               <div class="amount-item a-2">
-                  <h3>+ 4000 EUR</h3>
-               </div>
-               <div class="icon-del">
-                  <i class="bi bi-x-lg"></i>
-               </div>
-            </li>
-         </ul>
-      </div>
       <div class="left-wrap">
          <div class="balance-wrap text-left leading-3">
             <h1 class="text-3xl">0 EUR</h1>
@@ -126,7 +52,8 @@
          <div class="history-wrap">
             <h2>Transactions</h2>
             <!-- history item -->
-            <ul class="history mt-">
+            <ul class="history">
+
                <li class="h-item">
                   <!-- icon -->
                   <div class="icon">
@@ -137,13 +64,16 @@
                      <h3 class="text-base">Healthcare</h3>
                      <p class="small-txt">Aug 20, 2023</p>
                   </div>
+                  <!-- amount -->
                   <div class="amount-item a-1">
                      <h3>- 100 EUR</h3>
                   </div>
+                  <!-- del icon -->
                   <div class="icon-del">
-                     <i class="bi bi-x-lg ml-1"></i>
+                     <i class="bi bi-x-lg del-btn ml-1"></i>
                   </div>
                </li>
+
                <li class="h-item">
                   <!-- icon -->
                   <div class="icon">
@@ -158,7 +88,7 @@
                      <h3>- 500 EUR</h3>
                   </div>
                   <div class="icon-del">
-                     <i class="bi bi-x-lg ml-1"></i>
+                     <i class="bi bi-x-lg del-btn ml-1"></i>
                   </div>
                </li>
                <li class="h-item">
@@ -175,7 +105,7 @@
                      <h3>- 200 EUR</h3>
                   </div>
                   <div class="icon-del">
-                     <i class="bi bi-x-lg ml-1"></i>
+                     <i class="bi bi-x-lg del-btn ml-1"></i>
                   </div>
                </li>
                <li class="h-item">
@@ -192,18 +122,13 @@
                      <h3>+ 4000 EUR</h3>
                   </div>
                   <div class="icon-del">
-                     <i class="bi bi-x-lg"></i>
+                     <i class="bi bi-x-lg del-btn"></i>
                   </div>
                </li>
             </ul>
-            <!-- transaction history button -->
 
          </div>
-         <div class="history-btn-wrap flex justify-end">
-            <button class="btn-history">See more</button>
-         </div>
-
-         <div class="add-transaction-btn flex justify-center">
+            <div class="add-transaction-btn flex justify-center">
             <button class="btn">Add Transaction</i></button>
          </div>
          <!-- new transactions container -->
@@ -213,7 +138,7 @@
                <label for="expenses" class="exp-label">Select expenses category
                </label>
 
-               <select name="expenses" class="exp-options">
+               <select id="group" name="expenses" class="exp-options">
                   <option>Food</option>
                   <option>Healthcare</option>
                   <option>Housing</option>
@@ -221,13 +146,13 @@
 
                </select>
 
-               <label for="amount" class="exp-label"> Enter amount </label>
+               <label for="amount" id="amount-id" class="exp-label"> Enter amount (+/-) </label>
                <input type="number" placeholder="0 " id="amount" class="exp-options" />
                <label for="date" class="exp-label"> Choose date </label>
                <input type="date" id="date" class="exp-options" />
 
                <div class="btn-wrap flex w-full justify-center">
-                  <button class="btn mt-4">Submit</button>
+                  <button class="btn-submit btn mt-4">Submit</button>
                </div>
             </form>
          </div>
@@ -238,7 +163,7 @@
 
             <div class="charts chart">
                <div class="exp-w flex justify-between -mb-8">
-                  <h1>Expanses:</h1>
+                  <h1>Expenses:</h1>
                   <p>-300 EUR</p>
                </div>
                <canvas class="chart expenses" id="myChart" style="width:100%;max-width:600px"></canvas>
