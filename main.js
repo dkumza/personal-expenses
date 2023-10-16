@@ -1,4 +1,4 @@
-// * Transactions Data
+// Transactions Data
 const removeBtn = document.querySelectorAll(".del-btn");
 const liItem = document.querySelectorAll(".h-item");
 const inputs = document.querySelectorAll("input");
@@ -7,15 +7,62 @@ const expenseAmount = document.querySelector("#amount");
 const expenseDate = document.querySelector("#date");
 const submitBtn = document.querySelector(".btn-submit");
 const historyWrap = document.querySelector(".history");
-// console.log(options);
-// * modal
-// * declare variables
+
+// modal
 const modal = document.querySelector(".add-blur");
 const transactionBtn = document.querySelector(".btn");
 const transactionWrap = document.querySelector(".transaction-wrap");
 const addTransaction = document.querySelector(".add-transactions");
 
-// ? icon classes
+// total income and spent DOM variables
+const totIncome = document.querySelector(".tot-income");
+const totSpent = document.querySelector(".tot-spent");
+const balanceBig = document.querySelector(".balance-big");
+const incomeBig = document.querySelector(".income-big");
+
+// chart.js data
+const xLabel = ["Food", "Healthcare", "Housing"];
+let yLabel = [1, 1, 1];
+const barColors = [
+   "rgb(255, 99, 132)", // Food
+   "rgb(75, 192, 192)", // Healthcare
+   "rgb(255, 205, 86)", // Housing
+   "rgb(99, 135, 255)", // Salary
+];
+
+// Define myChart as a global variable
+let myChart;
+
+// Create the chart
+createChart();
+
+// Function to create the chart
+function createChart() {
+   myChart = new Chart("myChart", {
+      type: "pie",
+      data: {
+         labels: xLabel,
+         datasets: [
+            {
+               backgroundColor: barColors,
+               data: yLabel,
+            },
+         ],
+      },
+      options: {
+         responsive: false,
+         title: {
+            display: true,
+         },
+         legend: {
+            display: true,
+            position: "bottom",
+         },
+      },
+   });
+}
+
+// icon classes
 const iconClasses = {
    Food: ["bi", "bi-lightning-charge"],
    Healthcare: ["bi", "bi-balloon-heart"],
@@ -23,9 +70,48 @@ const iconClasses = {
    Salary: ["bi", "bi-cash-stack"],
 };
 
+// total income and spent variables
+let totalIncome = 0;
+let totalExpense = 0;
+
 const allTransactions = [];
 
-// ? function to create new transaction
+// function to sum all transactions by group
+const sumTransactions = () => {
+   // sum of each group variables
+   let foodGroup = 0;
+   let healthcareGroup = 0;
+   let housingGroup = 0;
+
+   allTransactions.forEach((transaction) => {
+      if (transaction.group === "Food") {
+         // takes absolute value of amount and adds it to the group variable
+         foodGroup += Math.abs(parseInt(transaction.amount));
+      } else if (transaction.group === "Healthcare") {
+         healthcareGroup += Math.abs(parseInt(transaction.amount));
+      } else if (transaction.group === "Housing") {
+         housingGroup += Math.abs(parseInt(transaction.amount));
+      }
+   });
+
+   return [foodGroup, healthcareGroup, housingGroup];
+};
+
+// function to push positive or negative amount to totalSpent array
+const sumTotalSpent = () => {
+   totalIncome = 0;
+   totalExpense = 0;
+   allTransactions.forEach((transaction) => {
+      if (transaction.amount < 0) {
+         totalExpense += parseInt(transaction.amount);
+      } else {
+         totalIncome += parseInt(transaction.amount);
+      }
+   });
+   return totalExpense, totalIncome;
+};
+
+// function to create new transaction
 class Transaction {
    constructor(group, amount, date) {
       this.group = group;
@@ -34,38 +120,45 @@ class Transaction {
    }
 }
 
-// ? function to add new transaction to all transactions array
+// function to add new transaction to all transactions array
 const addNewTransaction = () => {
-   let addNewTransaction = new Transaction(
+   const newTransaction = new Transaction(
       expenseOption.value,
       expenseAmount.value,
       expenseDate.value
    );
    if (
-      addNewTransaction.group === "" ||
-      addNewTransaction.amount === "" ||
-      addNewTransaction.date === ""
+      newTransaction.group === "" ||
+      newTransaction.amount === "" ||
+      newTransaction.date === ""
    ) {
       alert("All fields must be filled out");
    } else {
-      allTransactions.push(addNewTransaction);
-      console.log(allTransactions);
+      allTransactions.push(newTransaction);
       closeModal();
       clearInputs();
       spinTransactionArray();
-      // createNewTransactionDOM();
+      yLabel = sumTransactions();
+      sumTotalSpent();
+      updateTotals(totalIncome, totalExpense);
+      updateBalance(totalIncome, totalExpense);
+      updateIncome(totalIncome);
+
+      // Update the chart with the new yLabel values
+      myChart.data.datasets[0].data = yLabel;
+      myChart.update();
    }
 };
 
-//  ? remove li item on click of delete button
-removeBtn.forEach((btn) => {
-   btn.addEventListener("click", (e) => {
-      e.target.parentElement.parentElement.remove();
-   });
-});
+// remove li item on click of delete button
+removeBtn.forEach((btn) =>
+   btn.addEventListener("click", (e) =>
+      e.target.parentElement.parentElement.remove()
+   )
+);
 
-// ? take each transaction from array and pass to createNewTransactionDOM
-let spinTransactionArray = () => {
+// take each transaction from array and pass to createNewTransactionDOM
+const spinTransactionArray = () => {
    const transactionRemove = document.querySelectorAll(".h-item");
    transactionRemove.forEach((item) => item.remove());
 
@@ -74,44 +167,44 @@ let spinTransactionArray = () => {
    });
 };
 
-// ? create li item for each transaction
+// create li item for each transaction
 const createNewTransactionDOM = (item) => {
-   // * create li element
+   // create li element
    const transaction = document.createElement("li");
    transaction.classList.add("h-item");
-   // * create container for icon
+   // create container for icon
    const transactionIcon = document.createElement("div");
    transactionIcon.classList.add("icon");
-   // * create icon
+   // create icon
    const icon = document.createElement("i");
    icon.classList.add(...iconClasses[item.group]);
-   // * category wrapper
+   // category wrapper
    const category = document.createElement("div");
    category.classList.add("category-item");
-   // * category text - h3
+   // category text - h3
    const categoryText = document.createElement("h3");
    categoryText.classList.add("text-base");
-   // * category date text - p
+   // category date text - p
    const categoryDate = document.createElement("p");
    categoryDate.classList.add("small-txt");
-   // * category amount wrapper
+   // category amount wrapper
    const categoryAmount = document.createElement("div");
-   // ! check if amount is positive or negative
+   // check if amount is positive or negative
    if (item.amount < 0) {
       categoryAmount.classList.add("amount-item", "a-1");
    } else {
       categoryAmount.classList.add("amount-item", "a-2");
    }
-   // * category amount text - h3
+   // category amount text - h3
    const categoryAmountText = document.createElement("h3");
-   //  * delete icon wrapper
+   // delete icon wrapper
    const deleteIconWrap = document.createElement("div");
    deleteIconWrap.classList.add("icon-del");
-   // * delete icon
+   // delete icon
    const deleteIcon = document.createElement("i");
    deleteIcon.classList.add("bi", "bi-x-lg", "del-btn", "ml-1");
 
-   // * append elements
+   // append elements
    transaction.appendChild(transactionIcon);
    transactionIcon.appendChild(icon);
    transaction.appendChild(category);
@@ -122,23 +215,38 @@ const createNewTransactionDOM = (item) => {
    transaction.appendChild(deleteIconWrap);
    deleteIconWrap.appendChild(deleteIcon);
 
-   // * add text content
+   // add text content
    categoryText.textContent = item.group;
    categoryDate.textContent = item.date;
-   categoryAmountText.textContent = item.amount;
+   categoryAmountText.textContent = `${item.amount} EUR`;
 
-   // * append to history
+   // append to history
    historyWrap.appendChild(transaction);
 };
 
-// ? filling out form and adding new transaction on click of submit button
+// filling out form and adding new transaction on click of submit button
 submitBtn.addEventListener("click", (e) => {
    e.preventDefault();
    addNewTransaction();
 });
 
-// ? modal playground
+// function to add income and spent totals to DOM
+const updateTotals = (totalIncome, totalExpense) => {
+   totIncome.textContent = `${totalIncome} EUR`;
+   totSpent.textContent = `${totalExpense} EUR`;
+};
 
+// function to update balance to DOM
+const updateBalance = (totalIncome, totalExpense) => {
+   balanceBig.textContent = `${totalIncome + totalExpense} EUR`;
+};
+
+// function to update income to DOM
+const updateIncome = (totalIncome) => {
+   incomeBig.textContent = `${totalIncome} EUR`;
+};
+
+// modal playground
 transactionBtn.addEventListener("click", () => {
    modal.classList.remove("hide");
    transactionWrap.classList.remove("hide");
@@ -151,43 +259,7 @@ const closeModal = () => {
 
 modal.addEventListener("click", closeModal);
 
-// ? clear input values
+// clear input values
 const clearInputs = () => {
    inputs.forEach((input) => (input.value = ""));
 };
-
-// ! chart.js
-
-let xLabel = ["Food", "Healtcare", "Housing"];
-let yLabel = [500, 100, 300];
-let barColors = [
-   "rgb(255, 99, 132)", // Food
-   "rgb(75, 192, 192)", // Healthcare
-   "rgb(255, 205, 86)", // Housing
-   "rgb(99, 135, 255)", // Salary
-   //    "rgb(54, 162, 235)",
-];
-
-new Chart("myChart", {
-   type: "pie",
-   data: {
-      labels: xLabel,
-      datasets: [
-         {
-            backgroundColor: barColors,
-            data: yLabel,
-         },
-      ],
-   },
-   options: {
-      responsive: false,
-      title: {
-         display: true,
-         //  text: "Expanses",
-      },
-      legend: {
-         display: true,
-         position: "bottom",
-      },
-   },
-});

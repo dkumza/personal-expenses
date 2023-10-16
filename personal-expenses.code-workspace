@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../library-main"
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "personal-expenses"
+	}
+}

@@ -21,13 +21,13 @@
       <div class="add-blur hide"></div>
       <div class="left-wrap">
          <div class="balance-wrap text-left leading-3">
-            <h1 class="text-3xl">0 EUR</h1>
+            <h1 class="balance-big text-3xl">0 EUR</h1>
             <p class="small-txt">Balance</p>
          </div>
          <div class="inc-exp-wrap">
             <div class="income-wrap text-lime-400">
                <div class="euros">
-                  <h2 class="">0 EUR</h2>
+                  <h2 class="tot-income">0 EUR</h2>
                   <!-- <p class="small-txt">EUR</p> -->
                </div>
                <div class="income-small">
@@ -37,7 +37,7 @@
             </div>
             <div class="expenses-wrap text-rose-400">
                <div class="euros">
-                  <h2>0 EUR</h2>
+                  <h2 class="tot-spent">0 EUR</h2>
                   <!-- <p class="small-txt ">EUR</p> -->
                </div>
                <div class="income-small">
@@ -51,78 +51,7 @@
             <h2>Transactions</h2>
             <!-- history item -->
             <ul class="history">
-
-               <li class="h-item">
-                  <!-- icon -->
-                  <div class="icon">
-                     <i class="bi bi-balloon-heart"></i>
-                  </div>
-                  <!-- category item -->
-                  <div class="category-item">
-                     <h3 class="text-base">Healthcare</h3>
-                     <p class="small-txt">Aug 20, 2023</p>
-                  </div>
-                  <!-- amount -->
-                  <div class="amount-item a-1">
-                     <h3>- 100 EUR</h3>
-                  </div>
-                  <!-- del icon -->
-                  <div class="icon-del">
-                     <i class="bi bi-x-lg del-btn ml-1"></i>
-                  </div>
-               </li>
-
-               <li class="h-item">
-                  <!-- icon -->
-                  <div class="icon">
-                     <i class="bi bi-house-heart"></i>
-                  </div>
-                  <!-- category item -->
-                  <div class="category-item">
-                     <h3 class="text-base">Housing</h3>
-                     <p class="small-txt">Aug 20, 2023</p>
-                  </div>
-                  <div class="amount-item a-1">
-                     <h3>- 500 EUR</h3>
-                  </div>
-                  <div class="icon-del">
-                     <i class="bi bi-x-lg del-btn ml-1"></i>
-                  </div>
-               </li>
-               <li class="h-item">
-                  <!-- icon -->
-                  <div class="icon">
-                     <i class="bi bi-lightning-charge"></i>
-                  </div>
-                  <!-- category item -->
-                  <div class="category-item">
-                     <h3 class="text-base">Food</h3>
-                     <p class="small-txt">Aug 22, 2023</p>
-                  </div>
-                  <div class="amount-item a-1">
-                     <h3>- 200 EUR</h3>
-                  </div>
-                  <div class="icon-del">
-                     <i class="bi bi-x-lg del-btn ml-1"></i>
-                  </div>
-               </li>
-               <li class="h-item">
-                  <!-- icon -->
-                  <div class="icon">
-                     <i class="bi bi-cash-stack"></i>
-                  </div>
-                  <!-- category item -->
-                  <div class="category-item">
-                     <h3 class="text-base">Salary</h3>
-                     <p class="small-txt">Aug 7, 2023</p>
-                  </div>
-                  <div class="amount-item a-2">
-                     <h3>+ 4000 EUR</h3>
-                  </div>
-                  <div class="icon-del">
-                     <i class="bi bi-x-lg del-btn"></i>
-                  </div>
-               </li>
+               <!-- here goes all transactions -->
             </ul>
 
          </div>
@@ -162,7 +91,7 @@
             <div class="charts chart">
                <div class="exp-w flex justify-between -mb-8">
                   <h1>Expenses:</h1>
-                  <p>-300 EUR</p>
+                  <p>0 EUR</p>
                </div>
                <canvas class="chart expenses" id="myChart" style="width:100%;max-width:600px"></canvas>
             </div>
@@ -172,7 +101,7 @@
          </div>
          <div class="inc-w">
             <h1>Income:</h1>
-            <p>4000 EUR</p>
+            <p class="income-big">0 EUR</p>
          </div>
       </div>
    </div>
