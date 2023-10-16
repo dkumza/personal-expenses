@@ -74,9 +74,9 @@ const iconClasses = {
 let totalIncome = 0;
 let totalExpense = 0;
 
-const allTransactions = [];
+let allTransactions = [];
 
-// function to sum all transactions by group
+/// function to sum all transactions by group
 const sumTransactions = () => {
    // sum of each group variables
    let foodGroup = 0;
@@ -94,7 +94,8 @@ const sumTransactions = () => {
       }
    });
 
-   return [foodGroup, healthcareGroup, housingGroup];
+   yLabel = [foodGroup, healthcareGroup, housingGroup];
+   return yLabel;
 };
 
 // function to push positive or negative amount to totalSpent array
@@ -109,6 +110,9 @@ const sumTotalSpent = () => {
       }
    });
    return totalExpense, totalIncome;
+   // console.log("sumTotalSpent");
+   // console.log(totalExpense, totalIncome);
+   // console.log("working");
 };
 
 // function to create new transaction
@@ -142,10 +146,13 @@ const addNewTransaction = () => {
       closeModal();
       clearInputs();
       spinTransactionArray();
-      yLabel = sumTransactions();
+      // yLabel = sumTransactions();
+      sumTransactions();
       sumTotalSpent();
+
       updateTotals(totalIncome, totalExpense);
       updateBalance(totalIncome, totalExpense);
+      console.log(allTransactions);
 
       // Update the chart with the new yLabel values
       myChart.data.datasets[0].data = yLabel;
@@ -161,6 +168,10 @@ const spinTransactionArray = () => {
    allTransactions.forEach((transaction) => {
       createNewTransactionDOM(transaction);
    });
+
+   // Update the chart with the new yLabel values
+   myChart.data.datasets[0].data = yLabel;
+   myChart.update();
 };
 
 // create li item for each transaction
@@ -224,26 +235,22 @@ const createNewTransactionDOM = (item) => {
    const removeBtn = document.querySelectorAll(".del-btn");
    removeBtn.forEach((btn) =>
       btn.addEventListener("click", (e) => {
-         // delete li item
-         e.target.parentElement.parentElement.remove();
-         // remove transaction from allTransactions array
-         allTransactions.splice(allTransactions.indexOf(item), 1);
-         // update totals
-         yLabel = sumTransactions();
+         const liItem = e.target.parentElement.parentElement;
+         const amountText = liItem
+            .querySelector(".amount-item h3")
+            .textContent.replace(/EUR|\s/g, "");
+         const amountNumber = Number(amountText);
+         const index = allTransactions.findIndex(
+            (transaction) => transaction.amount === amountNumber
+         );
+         allTransactions.splice(index, 1);
+         liItem.remove();
+         sumTransactions();
          sumTotalSpent();
          updateTotals(totalIncome, totalExpense);
          updateBalance(totalIncome, totalExpense);
-         // Update the chart with the new yLabel values
          myChart.data.datasets[0].data = yLabel;
          myChart.update();
-
-         // if allTransactions array is empty, set yLabel to 1, 1, 1
-         // for nice visual effect
-         if (allTransactions.length === 0) {
-            yLabel = [1, 1, 1];
-            myChart.data.datasets[0].data = yLabel;
-            myChart.update();
-         }
       })
    );
 };
@@ -254,7 +261,8 @@ submitBtn.addEventListener("click", (e) => {
    addNewTransaction();
 });
 
-// function to add income and spent totals to DOM
+// function to add income and spent totals to DOM from allTransactions array
+
 const updateTotals = (totalIncome, totalExpense) => {
    totIncome.forEach((item) => (item.textContent = `${totalIncome} EUR`));
    // totIncome.textContent = `${totalIncome} EUR`;
@@ -284,5 +292,3 @@ modal.addEventListener("click", closeModal);
 const clearInputs = () => {
    inputs.forEach((input) => (input.value = ""));
 };
-
-// function to remove transaction on click of delete icon
