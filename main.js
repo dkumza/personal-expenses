@@ -153,13 +153,6 @@ const addNewTransaction = () => {
    }
 };
 
-// remove li item on click of delete button
-removeBtn.forEach((btn) =>
-   btn.addEventListener("click", (e) =>
-      e.target.parentElement.parentElement.remove()
-   )
-);
-
 // take each transaction from array and pass to createNewTransactionDOM
 const spinTransactionArray = () => {
    const transactionRemove = document.querySelectorAll(".h-item");
@@ -225,6 +218,34 @@ const createNewTransactionDOM = (item) => {
 
    // append to history
    historyWrap.appendChild(transaction);
+
+   // remove transaction on click of delete icon
+   // remove li item on click of delete button
+   const removeBtn = document.querySelectorAll(".del-btn");
+   removeBtn.forEach((btn) =>
+      btn.addEventListener("click", (e) => {
+         // delete li item
+         e.target.parentElement.parentElement.remove();
+         // remove transaction from allTransactions array
+         allTransactions.splice(allTransactions.indexOf(item), 1);
+         // update totals
+         yLabel = sumTransactions();
+         sumTotalSpent();
+         updateTotals(totalIncome, totalExpense);
+         updateBalance(totalIncome, totalExpense);
+         // Update the chart with the new yLabel values
+         myChart.data.datasets[0].data = yLabel;
+         myChart.update();
+
+         // if allTransactions array is empty, set yLabel to 1, 1, 1
+         // for nice visual effect
+         if (allTransactions.length === 0) {
+            yLabel = [1, 1, 1];
+            myChart.data.datasets[0].data = yLabel;
+            myChart.update();
+         }
+      })
+   );
 };
 
 // filling out form and adding new transaction on click of submit button
@@ -263,3 +284,5 @@ modal.addEventListener("click", closeModal);
 const clearInputs = () => {
    inputs.forEach((input) => (input.value = ""));
 };
+
+// function to remove transaction on click of delete icon
