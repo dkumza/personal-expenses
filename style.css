@@ -220,3 +220,7 @@
    shadow
    shadow-blue-200;
 }
+.history {
+   max-height: 400px; /* Set a maximum height for the container */
+   /* overflow: hidden;  */
+}

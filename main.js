@@ -15,10 +15,10 @@ const transactionWrap = document.querySelector(".transaction-wrap");
 const addTransaction = document.querySelector(".add-transactions");
 
 // total income and spent DOM variables
-const totIncome = document.querySelector(".tot-income");
-const totSpent = document.querySelector(".tot-spent");
+const totIncome = document.querySelectorAll(".tot-income");
+const totSpent = document.querySelectorAll(".tot-spent");
 const balanceBig = document.querySelector(".balance-big");
-const incomeBig = document.querySelector(".income-big");
+// const incomeBig = document.querySelector(".income-big");
 
 // chart.js data
 const xLabel = ["Food", "Healthcare", "Housing"];
@@ -134,6 +134,10 @@ const addNewTransaction = () => {
    ) {
       alert("All fields must be filled out");
    } else {
+      // Multiply the amount by -1 if it is positive
+      if (newTransaction.amount > 0 && newTransaction.group !== "Salary") {
+         newTransaction.amount *= -1;
+      }
       allTransactions.push(newTransaction);
       closeModal();
       clearInputs();
@@ -142,7 +146,6 @@ const addNewTransaction = () => {
       sumTotalSpent();
       updateTotals(totalIncome, totalExpense);
       updateBalance(totalIncome, totalExpense);
-      updateIncome(totalIncome);
 
       // Update the chart with the new yLabel values
       myChart.data.datasets[0].data = yLabel;
@@ -232,18 +235,15 @@ submitBtn.addEventListener("click", (e) => {
 
 // function to add income and spent totals to DOM
 const updateTotals = (totalIncome, totalExpense) => {
-   totIncome.textContent = `${totalIncome} EUR`;
-   totSpent.textContent = `${totalExpense} EUR`;
+   totIncome.forEach((item) => (item.textContent = `${totalIncome} EUR`));
+   // totIncome.textContent = `${totalIncome} EUR`;
+   totSpent.forEach((item) => (item.textContent = `${totalExpense} EUR`));
+   // totSpent.textContent = `${totalExpense} EUR`;
 };
 
 // function to update balance to DOM
 const updateBalance = (totalIncome, totalExpense) => {
    balanceBig.textContent = `${totalIncome + totalExpense} EUR`;
-};
-
-// function to update income to DOM
-const updateIncome = (totalIncome) => {
-   incomeBig.textContent = `${totalIncome} EUR`;
 };
 
 // modal playground
