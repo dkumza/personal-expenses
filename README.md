@@ -20,6 +20,7 @@ Or simply you can check already prebuilded version online - [HERE](https://dkumz
 ## Features
 
 -   Add transactions
+-   Remove transaction - buggy!!!
 -   View balance
 -   View total income and expenses
 -   View expenses by category in a chart
