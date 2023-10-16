@@ -249,6 +249,9 @@ const createNewTransactionDOM = (item) => {
          sumTotalSpent();
          updateTotals(totalIncome, totalExpense);
          updateBalance(totalIncome, totalExpense);
+         if (allTransactions.length === 0) {
+            yLabel = [1, 1, 1];
+         }
          myChart.data.datasets[0].data = yLabel;
          myChart.update();
       })
