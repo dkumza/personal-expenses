@@ -74,110 +74,122 @@ const iconClasses = {
 let totalIncome = 0;
 let totalExpense = 0;
 
-let allTransactions = [];
+const allTransactions = [];
 
-/// function to sum all transactions by group
+function Transaction(group, amount, date) {
+   this.group = group;
+   this.amount = amount;
+   this.date = date;
+}
+
+// * function to sum all transactions by group for chart js
 const sumTransactions = () => {
-   // sum of each group variables
    let foodGroup = 0;
    let healthcareGroup = 0;
    let housingGroup = 0;
+   let salaryGroup = 0;
 
    allTransactions.forEach((transaction) => {
       if (transaction.group === "Food") {
-         // takes absolute value of amount and adds it to the group variable
-         foodGroup += Math.abs(parseInt(transaction.amount));
+         // ? takes absolute value of amount and adds it to the group variable
+         foodGroup = Math.abs(parseInt(transaction.amount));
       } else if (transaction.group === "Healthcare") {
          healthcareGroup += Math.abs(parseInt(transaction.amount));
       } else if (transaction.group === "Housing") {
          housingGroup += Math.abs(parseInt(transaction.amount));
-      }
+      } else salaryGroup += Math.abs(parseInt(transaction.amount));
    });
 
+   console.log([foodGroup, healthcareGroup, housingGroup, salaryGroup]);
    yLabel = [foodGroup, healthcareGroup, housingGroup];
    return yLabel;
 };
 
-// function to push positive or negative amount to totalSpent array
+// * function to push positive or negative amount to totalSpent array
 const sumTotalSpent = () => {
    totalIncome = 0;
    totalExpense = 0;
    allTransactions.forEach((transaction) => {
+      console.log(typeof transaction.amount);
       if (transaction.amount < 0) {
-         totalExpense += parseInt(transaction.amount);
+         totalExpense += +transaction.amount;
       } else {
-         totalIncome += parseInt(transaction.amount);
+         totalIncome += +transaction.amount;
       }
    });
    return totalExpense, totalIncome;
-   // console.log("sumTotalSpent");
-   // console.log(totalExpense, totalIncome);
-   // console.log("working");
 };
 
-// function to create new transaction
-class Transaction {
-   constructor(group, amount, date) {
-      this.group = group;
-      this.amount = amount;
-      this.date = date;
-   }
-}
-
-// function to add new transaction to all transactions array
+// * function to add new transaction to all transactions array
 const addNewTransaction = () => {
+   let amount = expenseAmount.value;
+   // ? check if amount is positive or negative by checking group
+   // ? if group is food, healthcare or housing and amount is positive, make it negative
+   // ? else if group is salary and amount is negative, make it positive
+   if (
+      expenseOption.value === "Food" ||
+      expenseOption.value === "Healthcare" ||
+      (expenseOption.value === "Housing" && amount > 0)
+   ) {
+      amount = -amount;
+   } else if (expenseOption.value === "Salary" && amount < 0) {
+      amount = -amount;
+   }
+
    const newTransaction = new Transaction(
       expenseOption.value,
-      expenseAmount.value,
+      amount,
       expenseDate.value
    );
+
+   // ? check if all fields are filled out
    if (
       newTransaction.group === "" ||
       newTransaction.amount === "" ||
       newTransaction.date === ""
    ) {
+      // ? if not, alert user
       alert("All fields must be filled out");
-   } else {
-      // Multiply the amount by -1 if it is positive
-      if (newTransaction.amount > 0 && newTransaction.group !== "Salary") {
-         newTransaction.amount *= -1;
-      }
-      allTransactions.push(newTransaction);
-      closeModal();
-      clearInputs();
-      spinTransactionArray();
-      // yLabel = sumTransactions();
-      sumTransactions();
-      sumTotalSpent();
-
-      updateTotals(totalIncome, totalExpense);
-      updateBalance(totalIncome, totalExpense);
-      console.log(allTransactions);
-
-      // Update the chart with the new yLabel values
-      myChart.data.datasets[0].data = yLabel;
-      myChart.update();
-   }
+      // ? else push new transaction to allTransactions array
+   } else allTransactions.push(newTransaction);
+   console.log("expense amount value:", expenseAmount.value);
 };
 
-// take each transaction from array and pass to createNewTransactionDOM
+// * filling out form and adding new transaction on click of submit button
+submitBtn.addEventListener("click", (e) => {
+   e.preventDefault();
+   addNewTransaction();
+   spinTransactionArray();
+   console.log(allTransactions);
+   clearInputs();
+   closeModal();
+   sumTransactions();
+   sumTotalSpent();
+   updateTotals(totalIncome, totalExpense);
+   updateBalance(totalIncome, totalExpense);
+
+   // ? Update the chart with the new yLabel values
+   yLabel = sumTransactions();
+   myChart.data.datasets[0].data = yLabel;
+   myChart.update();
+});
+
+// * take each transaction from array and pass to createNewTransactionDOM
 const spinTransactionArray = () => {
    const transactionRemove = document.querySelectorAll(".h-item");
    transactionRemove.forEach((item) => item.remove());
 
-   allTransactions.forEach((transaction) => {
-      createNewTransactionDOM(transaction);
-   });
-
-   // Update the chart with the new yLabel values
-   myChart.data.datasets[0].data = yLabel;
-   myChart.update();
+   for (let i = 0; i < allTransactions.length; i++) {
+      createNewTransactionDOM(allTransactions[i]);
+   }
 };
 
-// create li item for each transaction
+// * create li item for each transaction
 const createNewTransactionDOM = (item) => {
+   console.log("item", item);
    // create li element
    const transaction = document.createElement("li");
+   transaction.setAttribute("id", allTransactions.indexOf(item));
    transaction.classList.add("h-item");
    // create container for icon
    const transactionIcon = document.createElement("div");
@@ -197,10 +209,10 @@ const createNewTransactionDOM = (item) => {
    // category amount wrapper
    const categoryAmount = document.createElement("div");
    // check if amount is positive or negative
-   if (item.amount < 0) {
-      categoryAmount.classList.add("amount-item", "a-1");
-   } else {
+   if (item.group === "Salary") {
       categoryAmount.classList.add("amount-item", "a-2");
+   } else {
+      categoryAmount.classList.add("amount-item", "a-1");
    }
    // category amount text - h3
    const categoryAmountText = document.createElement("h3");
@@ -231,54 +243,36 @@ const createNewTransactionDOM = (item) => {
    historyWrap.appendChild(transaction);
 
    // remove transaction on click of delete icon
-   // remove li item on click of delete button
-   const removeBtn = document.querySelectorAll(".del-btn");
-   removeBtn.forEach((btn) =>
-      btn.addEventListener("click", (e) => {
-         const liItem = e.target.parentElement.parentElement;
-         const amountText = liItem
-            .querySelector(".amount-item h3")
-            .textContent.replace(/EUR|\s/g, "");
-         const amountNumber = Number(amountText);
-         const index = allTransactions.findIndex(
-            (transaction) => transaction.amount === amountNumber
-         );
-         allTransactions.splice(index, 1);
-         liItem.remove();
-         sumTransactions();
-         sumTotalSpent();
-         updateTotals(totalIncome, totalExpense);
-         updateBalance(totalIncome, totalExpense);
-         if (allTransactions.length === 0) {
-            yLabel = [1, 1, 1];
-         }
-         myChart.data.datasets[0].data = yLabel;
-         myChart.update();
-      })
-   );
+   deleteIcon.addEventListener("click", () => {
+      historyWrap.removeChild(transaction);
+      allTransactions.splice(allTransactions.indexOf(item), 1);
+      console.log("after click", allTransactions);
+      sumTransactions();
+      sumTotalSpent();
+      updateTotals(totalIncome, totalExpense);
+      updateBalance(totalIncome, totalExpense);
+
+      // ? Update the chart with the new yLabel values
+      if (allTransactions.length === 0) {
+         yLabel = [1, 1, 1];
+      }
+      myChart.data.datasets[0].data = yLabel;
+      myChart.update();
+   });
 };
 
-// filling out form and adding new transaction on click of submit button
-submitBtn.addEventListener("click", (e) => {
-   e.preventDefault();
-   addNewTransaction();
-});
-
-// function to add income and spent totals to DOM from allTransactions array
-
+// * function to add income and spent totals to DOM from allTransactions array
 const updateTotals = (totalIncome, totalExpense) => {
    totIncome.forEach((item) => (item.textContent = `${totalIncome} EUR`));
-   // totIncome.textContent = `${totalIncome} EUR`;
    totSpent.forEach((item) => (item.textContent = `${totalExpense} EUR`));
-   // totSpent.textContent = `${totalExpense} EUR`;
 };
 
-// function to update balance to DOM
+// * function to update balance to DOM
 const updateBalance = (totalIncome, totalExpense) => {
    balanceBig.textContent = `${totalIncome + totalExpense} EUR`;
 };
 
-// modal playground
+// * modal playground
 transactionBtn.addEventListener("click", () => {
    modal.classList.remove("hide");
    transactionWrap.classList.remove("hide");
@@ -291,7 +285,7 @@ const closeModal = () => {
 
 modal.addEventListener("click", closeModal);
 
-// clear input values
+// * clear input values
 const clearInputs = () => {
    inputs.forEach((input) => (input.value = ""));
 };
