@@ -82,41 +82,45 @@ function Transaction(group, amount, date) {
    this.date = date;
 }
 
-/// function to sum all transactions by group
-// const sumTransactions = () => {
-//    // sum of each group variables
-//    let foodGroup = 0;
-//    let healthcareGroup = 0;
-//    let housingGroup = 0;
+// * function to sum all transactions by group for chart js
+const sumTransactions = () => {
+   let foodGroup = 0;
+   let healthcareGroup = 0;
+   let housingGroup = 0;
+   let salaryGroup = 0;
 
-//    allTransactions.forEach((transaction) => {
-//       if (transaction.group === "Food") {
-//          // takes absolute value of amount and adds it to the group variable
-//          foodGroup += Math.abs(parseInt(transaction.amount));
-//       } else if (transaction.group === "Healthcare") {
-//          healthcareGroup += Math.abs(parseInt(transaction.amount));
-//       } else if (transaction.group === "Housing") {
-//          housingGroup += Math.abs(parseInt(transaction.amount));
-//       }
-//    });
+   allTransactions.forEach((transaction) => {
+      if (transaction.group === "Food") {
+         // ? takes absolute value of amount and adds it to the group variable
+         foodGroup = Math.abs(parseInt(transaction.amount));
+      } else if (transaction.group === "Healthcare") {
+         healthcareGroup += Math.abs(parseInt(transaction.amount));
+      } else if (transaction.group === "Housing") {
+         housingGroup += Math.abs(parseInt(transaction.amount));
+      } else salaryGroup += Math.abs(parseInt(transaction.amount));
+   });
 
-//    yLabel = [foodGroup, healthcareGroup, housingGroup];
-//    return yLabel;
-// };
+   console.log([foodGroup, healthcareGroup, housingGroup, salaryGroup]);
+   yLabel = [foodGroup, healthcareGroup, housingGroup];
+   return yLabel;
+};
 
 // function to push positive or negative amount to totalSpent array
-// const sumTotalSpent = () => {
-//    totalIncome = 0;
-//    totalExpense = 0;
-//    allTransactions.forEach((transaction) => {
-//       if (transaction.amount < 0) {
-//          totalExpense += parseInt(transaction.amount);
-//       } else {
-//          totalIncome += parseInt(transaction.amount);
-//       }
-//    });
-//    return totalExpense, totalIncome;
-// };
+const sumTotalSpent = () => {
+   totalIncome = 0;
+   totalExpense = 0;
+   allTransactions.forEach((transaction) => {
+      console.log(typeof transaction.amount);
+      if (transaction.amount < 0) {
+         totalExpense += +transaction.amount;
+      } else {
+         totalIncome += +transaction.amount;
+      }
+   });
+   console.log(totalIncome, totalExpense);
+
+   // return totalExpense, totalIncome;
+};
 
 // function to create new transaction
 // class Transaction {
@@ -129,18 +133,37 @@ function Transaction(group, amount, date) {
 
 // function to add new transaction to all transactions array
 const addNewTransaction = () => {
+   let amount = expenseAmount.value;
+   // ? check if amount is positive or negative by checking group
+   // ? if group is food, healthcare or housing and amount is positive, make it negative
+   // ? else if group is salary and amount is negative, make it positive
+   if (
+      expenseOption.value === "Food" ||
+      expenseOption.value === "Healthcare" ||
+      (expenseOption.value === "Housing" && amount > 0)
+   ) {
+      amount = -amount;
+   } else if (expenseOption.value === "Salary" && amount < 0) {
+      amount = -amount;
+   }
+
    const newTransaction = new Transaction(
       expenseOption.value,
-      expenseAmount.value,
+      amount,
       expenseDate.value
    );
+
+   // ? check if all fields are filled out
    if (
       newTransaction.group === "" ||
       newTransaction.amount === "" ||
       newTransaction.date === ""
    ) {
+      // ? if not, alert user
       alert("All fields must be filled out");
+      // ? else push new transaction to allTransactions array
    } else allTransactions.push(newTransaction);
+   console.log("expense amount value:", expenseAmount.value);
 };
 
 // filling out form and adding new transaction on click of submit button
@@ -151,17 +174,15 @@ submitBtn.addEventListener("click", (e) => {
    console.log(allTransactions);
    clearInputs();
    closeModal();
+   sumTransactions();
+   sumTotalSpent();
+   updateTotals(totalIncome, totalExpense);
+   updateBalance(totalIncome, totalExpense);
 
-   // // yLabel = sumTransactions();
-   // sumTransactions();
-   // sumTotalSpent();
-
-   // updateTotals(totalIncome, totalExpense);
-   // updateBalance(totalIncome, totalExpense);
-
-   // // Update the chart with the new yLabel values
-   // myChart.data.datasets[0].data = yLabel;
-   // myChart.update();
+   // ? Update the chart with the new yLabel values
+   yLabel = sumTransactions();
+   myChart.data.datasets[0].data = yLabel;
+   myChart.update();
 });
 
 // take each transaction from array and pass to createNewTransactionDOM
@@ -201,10 +222,10 @@ const createNewTransactionDOM = (item) => {
    // category amount wrapper
    const categoryAmount = document.createElement("div");
    // check if amount is positive or negative
-   if (item.amount < 0) {
-      categoryAmount.classList.add("amount-item", "a-1");
-   } else {
+   if (item.group === "Salary") {
       categoryAmount.classList.add("amount-item", "a-2");
+   } else {
+      categoryAmount.classList.add("amount-item", "a-1");
    }
    // category amount text - h3
    const categoryAmountText = document.createElement("h3");
@@ -229,7 +250,9 @@ const createNewTransactionDOM = (item) => {
    // add text content
    categoryText.textContent = item.group;
    categoryDate.textContent = item.date;
+   // if (item.group === "Salary") {
    categoryAmountText.textContent = `${item.amount} EUR`;
+   // } else categoryAmountText.textContent = `-${item.amount} EUR`;
 
    // append to history
    historyWrap.appendChild(transaction);
