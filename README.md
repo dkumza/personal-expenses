@@ -28,5 +28,6 @@ Or simply you can check already prebuilded version online - [HERE](https://dkumz
 ## Technologies Used
 
 -   Vite
+-   JavaScript
 -   Tailwind CSS
 -   Chart.js
