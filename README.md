@@ -20,7 +20,7 @@ Or simply you can check already prebuilded version online - [HERE](https://dkumz
 ## Features
 
 -   Add transactions
--   Remove transactions - buggy!!!, works when deleting created li items from bottom. When deleting from top to bottom it's messes up numbers
+-   Remove transactions - buggy!!!
 -   View balance
 -   View total income and expenses
 -   View expenses by category in a chart
