@@ -100,7 +100,6 @@ const sumTransactions = () => {
       } else salaryGroup += Math.abs(parseInt(transaction.amount));
    });
 
-   console.log([foodGroup, healthcareGroup, housingGroup, salaryGroup]);
    yLabel = [foodGroup, healthcareGroup, housingGroup];
    return yLabel;
 };
@@ -110,7 +109,6 @@ const sumTotalSpent = () => {
    totalIncome = 0;
    totalExpense = 0;
    allTransactions.forEach((transaction) => {
-      console.log(typeof transaction.amount);
       if (transaction.amount < 0) {
          totalExpense += +transaction.amount;
       } else {
@@ -120,15 +118,25 @@ const sumTotalSpent = () => {
    return totalExpense, totalIncome;
 };
 
-// * function to add new transaction to all transactions array
+// function to add new transaction to all transactions array
 const addNewTransaction = () => {
-   let amount = expenseAmount.value;
-   // ? check if amount is positive or negative by checking group
-   // ? if group is food, healthcare or housing and amount is positive, make it negative
-   // ? else if group is salary and amount is negative, make it positive
+   // check if all fields are filled out
    if (
-      expenseOption.value === "Food" ||
-      expenseOption.value === "Healthcare" ||
+      expenseOption.value === "" ||
+      expenseAmount.value === "" ||
+      expenseDate.value === ""
+   ) {
+      alert("All fields must be filled out");
+      return;
+   }
+
+   let amount = expenseAmount.value;
+   // check if amount is positive or negative by checking group
+   // if group is food, healthcare or housing and amount is positive, make it negative
+   // else if group is salary and amount is negative, make it positive
+   if (
+      (expenseOption.value === "Food" && amount > 0) ||
+      (expenseOption.value === "Healthcare" && amount > 0) ||
       (expenseOption.value === "Housing" && amount > 0)
    ) {
       amount = -amount;
@@ -142,17 +150,9 @@ const addNewTransaction = () => {
       expenseDate.value
    );
 
-   // ? check if all fields are filled out
-   if (
-      newTransaction.group === "" ||
-      newTransaction.amount === "" ||
-      newTransaction.date === ""
-   ) {
-      // ? if not, alert user
-      alert("All fields must be filled out");
-      // ? else push new transaction to allTransactions array
-   } else allTransactions.push(newTransaction);
-   console.log("expense amount value:", expenseAmount.value);
+   allTransactions.push(newTransaction);
+   clearInputs();
+   closeModal();
 };
 
 // * filling out form and adding new transaction on click of submit button
@@ -160,9 +160,6 @@ submitBtn.addEventListener("click", (e) => {
    e.preventDefault();
    addNewTransaction();
    spinTransactionArray();
-   console.log(allTransactions);
-   clearInputs();
-   closeModal();
    sumTransactions();
    sumTotalSpent();
    updateTotals(totalIncome, totalExpense);
@@ -186,7 +183,6 @@ const spinTransactionArray = () => {
 
 // * create li item for each transaction
 const createNewTransactionDOM = (item) => {
-   console.log("item", item);
    // create li element
    const transaction = document.createElement("li");
    transaction.setAttribute("id", allTransactions.indexOf(item));
@@ -246,7 +242,6 @@ const createNewTransactionDOM = (item) => {
    deleteIcon.addEventListener("click", () => {
       historyWrap.removeChild(transaction);
       allTransactions.splice(allTransactions.indexOf(item), 1);
-      console.log("after click", allTransactions);
       sumTransactions();
       sumTotalSpent();
       updateTotals(totalIncome, totalExpense);
