@@ -74,55 +74,58 @@ const iconClasses = {
 let totalIncome = 0;
 let totalExpense = 0;
 
-let allTransactions = [];
+const allTransactions = [];
+
+function Transaction(group, amount, date) {
+   this.group = group;
+   this.amount = amount;
+   this.date = date;
+}
 
 /// function to sum all transactions by group
-const sumTransactions = () => {
-   // sum of each group variables
-   let foodGroup = 0;
-   let healthcareGroup = 0;
-   let housingGroup = 0;
+// const sumTransactions = () => {
+//    // sum of each group variables
+//    let foodGroup = 0;
+//    let healthcareGroup = 0;
+//    let housingGroup = 0;
 
-   allTransactions.forEach((transaction) => {
-      if (transaction.group === "Food") {
-         // takes absolute value of amount and adds it to the group variable
-         foodGroup += Math.abs(parseInt(transaction.amount));
-      } else if (transaction.group === "Healthcare") {
-         healthcareGroup += Math.abs(parseInt(transaction.amount));
-      } else if (transaction.group === "Housing") {
-         housingGroup += Math.abs(parseInt(transaction.amount));
-      }
-   });
+//    allTransactions.forEach((transaction) => {
+//       if (transaction.group === "Food") {
+//          // takes absolute value of amount and adds it to the group variable
+//          foodGroup += Math.abs(parseInt(transaction.amount));
+//       } else if (transaction.group === "Healthcare") {
+//          healthcareGroup += Math.abs(parseInt(transaction.amount));
+//       } else if (transaction.group === "Housing") {
+//          housingGroup += Math.abs(parseInt(transaction.amount));
+//       }
+//    });
 
-   yLabel = [foodGroup, healthcareGroup, housingGroup];
-   return yLabel;
-};
+//    yLabel = [foodGroup, healthcareGroup, housingGroup];
+//    return yLabel;
+// };
 
 // function to push positive or negative amount to totalSpent array
-const sumTotalSpent = () => {
-   totalIncome = 0;
-   totalExpense = 0;
-   allTransactions.forEach((transaction) => {
-      if (transaction.amount < 0) {
-         totalExpense += parseInt(transaction.amount);
-      } else {
-         totalIncome += parseInt(transaction.amount);
-      }
-   });
-   return totalExpense, totalIncome;
-   // console.log("sumTotalSpent");
-   // console.log(totalExpense, totalIncome);
-   // console.log("working");
-};
+// const sumTotalSpent = () => {
+//    totalIncome = 0;
+//    totalExpense = 0;
+//    allTransactions.forEach((transaction) => {
+//       if (transaction.amount < 0) {
+//          totalExpense += parseInt(transaction.amount);
+//       } else {
+//          totalIncome += parseInt(transaction.amount);
+//       }
+//    });
+//    return totalExpense, totalIncome;
+// };
 
 // function to create new transaction
-class Transaction {
-   constructor(group, amount, date) {
-      this.group = group;
-      this.amount = amount;
-      this.date = date;
-   }
-}
+// class Transaction {
+//    constructor(group, amount, date) {
+//       this.group = group;
+//       this.amount = amount;
+//       this.date = date;
+//    }
+// }
 
 // function to add new transaction to all transactions array
 const addNewTransaction = () => {
@@ -137,28 +140,29 @@ const addNewTransaction = () => {
       newTransaction.date === ""
    ) {
       alert("All fields must be filled out");
-   } else {
-      // Multiply the amount by -1 if it is positive
-      if (newTransaction.amount > 0 && newTransaction.group !== "Salary") {
-         newTransaction.amount *= -1;
-      }
-      allTransactions.push(newTransaction);
-      closeModal();
-      clearInputs();
-      spinTransactionArray();
-      // yLabel = sumTransactions();
-      sumTransactions();
-      sumTotalSpent();
-
-      updateTotals(totalIncome, totalExpense);
-      updateBalance(totalIncome, totalExpense);
-      console.log(allTransactions);
-
-      // Update the chart with the new yLabel values
-      myChart.data.datasets[0].data = yLabel;
-      myChart.update();
-   }
+   } else allTransactions.push(newTransaction);
 };
+
+// filling out form and adding new transaction on click of submit button
+submitBtn.addEventListener("click", (e) => {
+   e.preventDefault();
+   addNewTransaction();
+   spinTransactionArray();
+   console.log(allTransactions);
+   clearInputs();
+   closeModal();
+
+   // // yLabel = sumTransactions();
+   // sumTransactions();
+   // sumTotalSpent();
+
+   // updateTotals(totalIncome, totalExpense);
+   // updateBalance(totalIncome, totalExpense);
+
+   // // Update the chart with the new yLabel values
+   // myChart.data.datasets[0].data = yLabel;
+   // myChart.update();
+});
 
 // take each transaction from array and pass to createNewTransactionDOM
 const spinTransactionArray = () => {
@@ -170,8 +174,8 @@ const spinTransactionArray = () => {
    });
 
    // Update the chart with the new yLabel values
-   myChart.data.datasets[0].data = yLabel;
-   myChart.update();
+   // myChart.data.datasets[0].data = yLabel;
+   // myChart.update();
 };
 
 // create li item for each transaction
@@ -232,37 +236,42 @@ const createNewTransactionDOM = (item) => {
 
    // remove transaction on click of delete icon
    // remove li item on click of delete button
-   const removeBtn = document.querySelectorAll(".del-btn");
-   removeBtn.forEach((btn) =>
-      btn.addEventListener("click", (e) => {
-         const liItem = e.target.parentElement.parentElement;
-         const amountText = liItem
-            .querySelector(".amount-item h3")
-            .textContent.replace(/EUR|\s/g, "");
-         const amountNumber = Number(amountText);
-         const index = allTransactions.findIndex(
-            (transaction) => transaction.amount === amountNumber
-         );
-         allTransactions.splice(index, 1);
-         liItem.remove();
-         sumTransactions();
-         sumTotalSpent();
-         updateTotals(totalIncome, totalExpense);
-         updateBalance(totalIncome, totalExpense);
-         if (allTransactions.length === 0) {
-            yLabel = [1, 1, 1];
-         }
-         myChart.data.datasets[0].data = yLabel;
-         myChart.update();
-      })
-   );
-};
+   // const removeBtn = document.querySelectorAll(".del-btn");
+   // console.log(allTransactions);
+   // removeBtn.forEach((btn) => {
+   //    btn.addEventListener("click", (e) => {
+   //       // Get the parent li element of the button
+   //       const liItem = e.target.closest("li");
 
-// filling out form and adding new transaction on click of submit button
-submitBtn.addEventListener("click", (e) => {
-   e.preventDefault();
-   addNewTransaction();
-});
+   //       // Get the amount of the transaction from the li element
+   //       const amount = Number(
+   //          liItem
+   //             .querySelector(".amount-item h3")
+   //             .textContent.replace(/EUR|\s/g, "")
+   //       );
+   //       // Find the index of the transaction in the allTransactions array
+   //       console.log(allTransactions);
+   //       const index = allTransactions.findIndex(
+   //          (transaction) => transaction.amount === amount
+   //       );
+   //       // Remove the transaction from the allTransactions array
+   //       allTransactions.splice(index, 1);
+   //       // Remove the li element from the DOM
+   //       liItem.remove();
+   //       // Update the totals and balance
+   //       sumTransactions();
+   //       sumTotalSpent();
+   //       updateTotals(totalIncome, totalExpense);
+   //       updateBalance(totalIncome, totalExpense);
+   //       // Update the chart data
+   //       if (allTransactions.length === 0) {
+   //          yLabel = [1, 1, 1];
+   //       }
+   //       myChart.data.datasets[0].data = yLabel;
+   //       myChart.update();
+   //    });
+   // });
+};
 
 // function to add income and spent totals to DOM from allTransactions array
 
