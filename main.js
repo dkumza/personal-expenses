@@ -105,7 +105,7 @@ const sumTransactions = () => {
    return yLabel;
 };
 
-// function to push positive or negative amount to totalSpent array
+// * function to push positive or negative amount to totalSpent array
 const sumTotalSpent = () => {
    totalIncome = 0;
    totalExpense = 0;
@@ -117,21 +117,10 @@ const sumTotalSpent = () => {
          totalIncome += +transaction.amount;
       }
    });
-   console.log(totalIncome, totalExpense);
-
-   // return totalExpense, totalIncome;
+   return totalExpense, totalIncome;
 };
 
-// function to create new transaction
-// class Transaction {
-//    constructor(group, amount, date) {
-//       this.group = group;
-//       this.amount = amount;
-//       this.date = date;
-//    }
-// }
-
-// function to add new transaction to all transactions array
+// * function to add new transaction to all transactions array
 const addNewTransaction = () => {
    let amount = expenseAmount.value;
    // ? check if amount is positive or negative by checking group
@@ -166,7 +155,7 @@ const addNewTransaction = () => {
    console.log("expense amount value:", expenseAmount.value);
 };
 
-// filling out form and adding new transaction on click of submit button
+// * filling out form and adding new transaction on click of submit button
 submitBtn.addEventListener("click", (e) => {
    e.preventDefault();
    addNewTransaction();
@@ -185,24 +174,22 @@ submitBtn.addEventListener("click", (e) => {
    myChart.update();
 });
 
-// take each transaction from array and pass to createNewTransactionDOM
+// * take each transaction from array and pass to createNewTransactionDOM
 const spinTransactionArray = () => {
    const transactionRemove = document.querySelectorAll(".h-item");
    transactionRemove.forEach((item) => item.remove());
 
-   allTransactions.forEach((transaction) => {
-      createNewTransactionDOM(transaction);
-   });
-
-   // Update the chart with the new yLabel values
-   // myChart.data.datasets[0].data = yLabel;
-   // myChart.update();
+   for (let i = 0; i < allTransactions.length; i++) {
+      createNewTransactionDOM(allTransactions[i]);
+   }
 };
 
-// create li item for each transaction
+// * create li item for each transaction
 const createNewTransactionDOM = (item) => {
+   console.log("item", item);
    // create li element
    const transaction = document.createElement("li");
+   transaction.setAttribute("id", allTransactions.indexOf(item));
    transaction.classList.add("h-item");
    // create container for icon
    const transactionIcon = document.createElement("div");
@@ -250,67 +237,42 @@ const createNewTransactionDOM = (item) => {
    // add text content
    categoryText.textContent = item.group;
    categoryDate.textContent = item.date;
-   // if (item.group === "Salary") {
    categoryAmountText.textContent = `${item.amount} EUR`;
-   // } else categoryAmountText.textContent = `-${item.amount} EUR`;
 
    // append to history
    historyWrap.appendChild(transaction);
 
    // remove transaction on click of delete icon
-   // remove li item on click of delete button
-   // const removeBtn = document.querySelectorAll(".del-btn");
-   // console.log(allTransactions);
-   // removeBtn.forEach((btn) => {
-   //    btn.addEventListener("click", (e) => {
-   //       // Get the parent li element of the button
-   //       const liItem = e.target.closest("li");
+   deleteIcon.addEventListener("click", () => {
+      historyWrap.removeChild(transaction);
+      allTransactions.splice(allTransactions.indexOf(item), 1);
+      console.log("after click", allTransactions);
+      sumTransactions();
+      sumTotalSpent();
+      updateTotals(totalIncome, totalExpense);
+      updateBalance(totalIncome, totalExpense);
 
-   //       // Get the amount of the transaction from the li element
-   //       const amount = Number(
-   //          liItem
-   //             .querySelector(".amount-item h3")
-   //             .textContent.replace(/EUR|\s/g, "")
-   //       );
-   //       // Find the index of the transaction in the allTransactions array
-   //       console.log(allTransactions);
-   //       const index = allTransactions.findIndex(
-   //          (transaction) => transaction.amount === amount
-   //       );
-   //       // Remove the transaction from the allTransactions array
-   //       allTransactions.splice(index, 1);
-   //       // Remove the li element from the DOM
-   //       liItem.remove();
-   //       // Update the totals and balance
-   //       sumTransactions();
-   //       sumTotalSpent();
-   //       updateTotals(totalIncome, totalExpense);
-   //       updateBalance(totalIncome, totalExpense);
-   //       // Update the chart data
-   //       if (allTransactions.length === 0) {
-   //          yLabel = [1, 1, 1];
-   //       }
-   //       myChart.data.datasets[0].data = yLabel;
-   //       myChart.update();
-   //    });
-   // });
+      // ? Update the chart with the new yLabel values
+      if (allTransactions.length === 0) {
+         yLabel = [1, 1, 1];
+      }
+      myChart.data.datasets[0].data = yLabel;
+      myChart.update();
+   });
 };
 
-// function to add income and spent totals to DOM from allTransactions array
-
+// * function to add income and spent totals to DOM from allTransactions array
 const updateTotals = (totalIncome, totalExpense) => {
    totIncome.forEach((item) => (item.textContent = `${totalIncome} EUR`));
-   // totIncome.textContent = `${totalIncome} EUR`;
    totSpent.forEach((item) => (item.textContent = `${totalExpense} EUR`));
-   // totSpent.textContent = `${totalExpense} EUR`;
 };
 
-// function to update balance to DOM
+// * function to update balance to DOM
 const updateBalance = (totalIncome, totalExpense) => {
    balanceBig.textContent = `${totalIncome + totalExpense} EUR`;
 };
 
-// modal playground
+// * modal playground
 transactionBtn.addEventListener("click", () => {
    modal.classList.remove("hide");
    transactionWrap.classList.remove("hide");
@@ -323,7 +285,7 @@ const closeModal = () => {
 
 modal.addEventListener("click", closeModal);
 
-// clear input values
+// * clear input values
 const clearInputs = () => {
    inputs.forEach((input) => (input.value = ""));
 };
