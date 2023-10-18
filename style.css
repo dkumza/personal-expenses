@@ -21,7 +21,8 @@
           text-xl        
           text-gray-700
           flex
-          sm:flex-col
+          lg:flex-row
+          flex-col
           /* gap-6 */
           rounded-b-lg
           relative;
