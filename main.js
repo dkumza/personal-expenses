@@ -134,14 +134,19 @@ const addNewTransaction = () => {
    // check if amount is positive or negative by checking group
    // if group is food, healthcare or housing and amount is positive, make it negative
    // else if group is salary and amount is negative, make it positive
-   if (
-      (expenseOption.value === "Food" && amount > 0) ||
-      (expenseOption.value === "Healthcare" && amount > 0) ||
-      (expenseOption.value === "Housing" && amount > 0)
-   ) {
-      amount = -amount;
-   } else if (expenseOption.value === "Salary" && amount < 0) {
-      amount = -amount;
+   switch (expenseOption.value) {
+      case "Food":
+      case "Healthcare":
+      case "Housing":
+         if (amount > 0) {
+            amount = -amount;
+         }
+         break;
+      case "Salary":
+         if (amount < 0) {
+            amount = -amount;
+         }
+         break;
    }
 
    const newTransaction = new Transaction(
@@ -195,7 +200,22 @@ const createNewTransactionDOM = (item) => {
    transactionIcon.classList.add("icon");
    // create icon
    const icon = document.createElement("i");
-   icon.classList.add(...iconClasses[item.group]);
+   // icon classes
+   switch (item.group) {
+      case "Food":
+         icon.classList.add("bi", "bi-lightning-charge");
+         break;
+      case "Healthcare":
+         icon.classList.add("bi", "bi-balloon-heart");
+         break;
+      case "Housing":
+         icon.classList.add("bi", "bi-house-heart");
+         break;
+      default:
+         icon.classList.add("bi", "bi-cash-stack");
+         break;
+   }
+   // icon.classList.add(...iconClasses[item.group]);
    // category wrapper
    const category = document.createElement("div");
    category.classList.add("category-item");
