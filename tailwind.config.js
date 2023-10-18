@@ -9,7 +9,7 @@ module.exports = {
       },
       screens: {
          // cutting out TWCSS default values
-         sm: { min: "640px", max: "767px" },
+         sm: { min: "420px", max: "767px" },
          // => @media (min-width: 640px and max-width: 767px) { ... }
 
          md: { min: "1024px", max: "1024px" },
