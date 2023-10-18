@@ -17,6 +17,8 @@
           lg:mx-auto 
           lg:shadow-xl
           lg:m-4  
+          m-4
+          mt-6
           text-xl   
           mx-auto 
           text-gray-700
@@ -24,9 +26,7 @@
           lg:flex-row
           flex-col
           lg:rounded-b-lg
-          relative
-          pt-8
-          pb-8;
+          relative;
 }
 
 .left-wrap,
