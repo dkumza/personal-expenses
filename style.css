@@ -13,8 +13,7 @@
 
 .main-container {
    @apply container 
-          mt-10  
-          container
+          mt-10        
           rounded
           mx-auto 
           shadow-xl
@@ -22,6 +21,7 @@
           text-xl        
           text-gray-700
           flex
+          sm:flex-col
           /* gap-6 */
           rounded-b-lg
           relative;
