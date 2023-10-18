@@ -74,7 +74,7 @@ const iconClasses = {
 let totalIncome = 0;
 let totalExpense = 0;
 
-const allTransactions = [];
+let allTransactions = [];
 
 function Transaction(group, amount, date) {
    this.group = group;
@@ -153,6 +153,9 @@ const addNewTransaction = () => {
    allTransactions.push(newTransaction);
    clearInputs();
    closeModal();
+
+   // Save the updated allTransactions array to local storage
+   localStorage.setItem("transactions", JSON.stringify(allTransactions));
 };
 
 // * filling out form and adding new transaction on click of submit button
@@ -247,6 +250,9 @@ const createNewTransactionDOM = (item) => {
       updateTotals(totalIncome, totalExpense);
       updateBalance(totalIncome, totalExpense);
 
+      // Save the updated allTransactions array to local storage
+      localStorage.setItem("transactions", JSON.stringify(allTransactions));
+
       // ? Update the chart with the new yLabel values
       if (allTransactions.length === 0) {
          yLabel = [1, 1, 1];
@@ -284,3 +290,22 @@ modal.addEventListener("click", closeModal);
 const clearInputs = () => {
    inputs.forEach((input) => (input.value = ""));
 };
+
+// *  Check if there are any transactions in local storage
+if (localStorage.getItem("transactions")) {
+   // Load transactions from local storage
+   allTransactions = JSON.parse(localStorage.getItem("transactions"));
+   spinTransactionArray();
+   sumTransactions();
+   sumTotalSpent();
+   updateTotals(totalIncome, totalExpense);
+   updateBalance(totalIncome, totalExpense);
+   if (allTransactions.length === 0) {
+      yLabel = [1, 1, 1];
+   }
+   myChart.data.datasets[0].data = yLabel;
+   myChart.update();
+} else {
+   // Initialize allTransactions as an empty array
+   allTransactions = [];
+}
