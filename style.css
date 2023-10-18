@@ -13,7 +13,7 @@
 
 .main-container {
    @apply container 
-          rounded
+          lg:rounded
           lg:mx-auto 
           lg:shadow-xl
           lg:m-4  
@@ -34,8 +34,8 @@
    flex-col
    p-6
    gap-4
-   border
-   rounded;
+   lg:border
+   lg:rounded;
 }
 
 .left-wrap {
