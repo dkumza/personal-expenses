@@ -24,7 +24,9 @@
           lg:flex-row
           flex-col
           lg:rounded-b-lg
-          relative;
+          relative
+          pt-4
+          pb-4;
 }
 
 .left-wrap,
