@@ -13,6 +13,7 @@ const modal = document.querySelector(".add-blur");
 const transactionBtn = document.querySelector(".btn");
 const transactionWrap = document.querySelector(".transaction-wrap");
 const addTransaction = document.querySelector(".add-transactions");
+const closeModalX = document.querySelector(".exit-modal");
 
 // total income and spent DOM variables
 const totIncome = document.querySelectorAll(".tot-income");
@@ -62,13 +63,13 @@ function createChart() {
    });
 }
 
-// icon classes
-const iconClasses = {
-   Food: ["bi", "bi-lightning-charge"],
-   Healthcare: ["bi", "bi-balloon-heart"],
-   Housing: ["bi", "bi-house-heart"],
-   Salary: ["bi", "bi-cash-stack"],
-};
+// ! icon classes but doesnt work with Vite...
+// const iconClasses = {
+//    Food: ["bi", "bi-lightning-charge"],
+//    Healthcare: ["bi", "bi-balloon-heart"],
+//    Housing: ["bi", "bi-house-heart"],
+//    Salary: ["bi", "bi-cash-stack"],
+// };
 
 // total income and spent variables
 let totalIncome = 0;
@@ -184,16 +185,15 @@ const spinTransactionArray = () => {
    const transactionRemove = document.querySelectorAll(".h-item");
    transactionRemove.forEach((item) => item.remove());
 
-   for (let i = 0; i < allTransactions.length; i++) {
-      createNewTransactionDOM(allTransactions[i]);
-   }
+   allTransactions.forEach((transaction) => {
+      createNewTransactionDOM(transaction);
+   });
 };
 
 // * create li item for each transaction
 const createNewTransactionDOM = (item) => {
    // create li element
    const transaction = document.createElement("li");
-   transaction.setAttribute("id", allTransactions.indexOf(item));
    transaction.classList.add("h-item");
    // create container for icon
    const transactionIcon = document.createElement("div");
@@ -215,6 +215,7 @@ const createNewTransactionDOM = (item) => {
          icon.classList.add("bi", "bi-cash-stack");
          break;
    }
+   // ! doesnt work with Vite...
    // icon.classList.add(...iconClasses[item.group]);
    // category wrapper
    const category = document.createElement("div");
@@ -305,6 +306,7 @@ const closeModal = () => {
 };
 
 modal.addEventListener("click", closeModal);
+closeModalX.addEventListener("click", closeModal);
 
 // * clear input values
 const clearInputs = () => {

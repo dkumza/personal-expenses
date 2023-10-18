@@ -13,8 +13,8 @@
    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/datepicker.min.js"></script> -->
    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" />
    <title>Expenses Tracker</title>
-  <script type="module" crossorigin src="/personal-expenses/assets/index-75fc4d62.js"></script>
-  <link rel="stylesheet" href="/personal-expenses/assets/index-52331d34.css">
+  <script type="module" crossorigin src="/personal-expenses/assets/index-8c0866c2.js"></script>
+  <link rel="stylesheet" href="/personal-expenses/assets/index-93a9fa92.css">
 </head>
 
 <body>
@@ -62,7 +62,12 @@
          </div>
          <!-- new transactions container -->
          <div class="add-transactions transaction-wrap mt-6 hide">
-            <h2>Add Transactions</h2>
+            <!-- top menu -->
+            <div class="top-menu-trans flex justify-between">
+               <h2>Add Transactions</h2>
+               <button class="exit-modal">x</button>
+            </div>
+            
             <form action="#" class="input">
                <label for="expenses" class="exp-label">Select expenses category
                </label>

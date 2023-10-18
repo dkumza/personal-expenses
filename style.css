@@ -14,15 +14,16 @@
 .main-container {
    @apply container 
           rounded
+          lg:mx-auto 
+          lg:shadow-xl
+          lg:m-4  
+          text-xl   
           mx-auto 
-          shadow-xl
-          m-4  
-          text-xl        
           text-gray-700
           flex
           lg:flex-row
           flex-col
-          rounded-b-lg
+          lg:rounded-b-lg
           relative;
 }
 
@@ -38,7 +39,7 @@
 }
 
 .left-wrap {
-   @apply border-r;
+   @apply lg:border-r;
 }
 
 .inc-exp-wrap {
@@ -175,7 +176,9 @@
    @apply border
    rounded
    shadow-xl
-   w-1/2
+   w-2/3
+   lg:w-1/2
+   
    p-6
    bg-white
    absolute
