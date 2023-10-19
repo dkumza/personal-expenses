@@ -21,7 +21,7 @@ Or simply you can check already prebuilded version online - [HERE](https://dkumz
 
 -   Add transactions
 -   Remove transactions
--   Save or Remove data from localStorage
+-   localStorage
 -   View balance
 -   View total income and expenses
 -   View expenses by category in a chart (do not shows salary)
