@@ -54,6 +54,9 @@ function createChart() {
          responsive: false,
          title: {
             display: true,
+            text: "All Expenses",
+            fontWeight: "lighter",
+            fontSize: 14,
          },
          legend: {
             display: true,
