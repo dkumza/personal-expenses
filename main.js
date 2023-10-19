@@ -78,7 +78,17 @@ function createChart() {
 let totalIncome = 0;
 let totalExpense = 0;
 
-let allTransactions = [];
+// let allTransactions = [];
+// ! dummy data... for testing
+let allTransactions = [
+   { group: "Healthcare", amount: -400, date: "2023-10-09" },
+   { group: "Housing", amount: -600, date: "2023-10-10" },
+   { group: "Salary", amount: 4000, date: "2023-10-03" },
+   { group: "Healthcare", amount: -50, date: "2023-10-17" },
+   { group: "Food", amount: -600, date: "2023-10-17" },
+   { group: "Salary", amount: 1000, date: "2022-04-03" },
+];
+// console.log(allTransactions);
 
 function Transaction(group, amount, date) {
    this.group = group;
@@ -262,8 +272,13 @@ const createNewTransactionDOM = (item) => {
    categoryDate.textContent = item.date;
    categoryAmountText.textContent = `${item.amount} EUR`;
 
-   // append to history
-   historyWrap.appendChild(transaction);
+   // append to history bottom, default value
+   // ? historyWrap.appendChild(transaction);
+   // insert at the top of the list
+   // takes 1st child from history wrap.
+   const firstTransaction = historyWrap.firstChild;
+   // after taking, then inserts new li item before that 1st child...
+   historyWrap.insertBefore(transaction, firstTransaction);
 
    // remove transaction on click of delete icon
    deleteIcon.addEventListener("click", () => {
@@ -317,7 +332,8 @@ const clearInputs = () => {
 };
 
 // *  Check if there are any transactions in local storage
-if (localStorage.getItem("transactions")) {
+if (localStorage.getItem("transactions").length === 1) {
+   console.log(localStorage);
    // Load transactions from local storage
    allTransactions = JSON.parse(localStorage.getItem("transactions"));
    spinTransactionArray();
@@ -332,5 +348,17 @@ if (localStorage.getItem("transactions")) {
    myChart.update();
 } else {
    // Initialize allTransactions as an empty array
-   allTransactions = [];
+   // allTransactions = [
+   //    { group: "Healthcare", amount: -400, date: "2023-10-09" },
+   //    { group: "Housing", amount: -600, date: "2023-10-10" },
+   //    { group: "Salary", amount: 4000, date: "2023-10-03" },
+   //    { group: "Healthcare", amount: -50, date: "2023-10-17" },
+   //    { group: "Food", amount: -600, date: "2023-10-17" },
+   // ];
+   // addNewTransaction();
+   spinTransactionArray();
+   sumTransactions();
+   sumTotalSpent();
+   updateTotals(totalIncome, totalExpense);
+   updateBalance(totalIncome, totalExpense);
 }
