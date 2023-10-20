@@ -11,7 +11,7 @@ const historyWrap = document.querySelector(".history");
 const filterButtons = document.querySelectorAll(".btn-f");
 const filter1 = document.querySelector(".filter-1");
 const filter2 = document.querySelector(".filter-2");
-const filter3 = document.querySelector(".filter-3");
+const filterReset = document.querySelector(".filter-3");
 const filterMenu = document.querySelector(".filter-menu");
 // console.log(allFilter);
 
@@ -21,6 +21,9 @@ const transactionBtn = document.querySelector(".btn");
 const transactionWrap = document.querySelector(".transaction-wrap");
 const addTransaction = document.querySelector(".add-transactions");
 const closeModalX = document.querySelector(".exit-modal");
+// filter modals
+const filter1Modal = document.querySelector(".fil1-modal"); //1st element of filters
+const modalTrans = document.querySelector(".add-transparent");
 
 // total income and spent DOM variables
 const totIncome = document.querySelectorAll(".tot-income");
@@ -99,15 +102,12 @@ let allTransactions = [
 // filter btn managment
 const checkFilterStatus = () => {
    filterButtons.forEach((filter) => {
-      if (allTransactions.length > 1) {
-         // console.log(filterButtons);
-         filter.classList.remove("filter-op-25");
-      } else filter.classList.add("filter-op-25");
-      //    filter.addEventListener("click", (e) => {
-      //       console.log(e);
-      //    });
-      // }
+      allTransactions.length > 1
+         ? filter.classList.remove("filter-op-25")
+         : filter.classList.add("filter-op-25");
    });
+
+   filterReset.
 };
 
 function Transaction(group, amount, date) {
@@ -340,6 +340,15 @@ transactionBtn.addEventListener("click", () => {
    transactionWrap.classList.remove("hide");
 });
 
+// ? modal for filters
+// filterButtons.addEventListener("click", () => {
+//    console.log("clicked filter icon");
+//    // filter1Modal.classList.remove("hide");
+//    // transactionWrap.classList.remove("hide");
+// });
+
+// ? to hide modals
+
 const closeModal = () => {
    modal.classList.add("hide");
    addTransaction.classList.add("hide");
@@ -347,6 +356,17 @@ const closeModal = () => {
 
 modal.addEventListener("click", closeModal);
 closeModalX.addEventListener("click", closeModal);
+
+const showFilter1Modal = () => {
+   filter1Modal.classList.remove("hide");
+   modalTrans.classList.remove("hide");
+};
+const hideFilterModal = () => {
+   modalTrans.classList.add("hide");
+   filter1Modal.classList.add("hide");
+};
+
+modalTrans.addEventListener("click", hideFilterModal);
 
 // * clear input values
 const clearInputs = () => {
@@ -379,34 +399,60 @@ if (localStorage.getItem("transactions").length >= 3) {
    checkFilterStatus();
 }
 
-console.log("filter by group- Food:");
-// filter by group
-const filterByGroup = [...allTransactions];
-let foodOnly = filterByGroup.filter(
-   (transaction) => transaction.group === "Food"
-);
-
-console.log(foodOnly);
-// console.log(filterByGroup);
-
-// console.log(filterByGroup);
-
-// const healthcareExpenses = allTransactions.filter(
-//    (transaction) => transaction.group === "Healthcare"
-// );
-
-// console.log(foodExpenses);
-//  ! console.log(healthcareExpenses);
+// ! console.log("filter by group- Food:");
+// * filter by group
+let foodGroupSelected = (clickedOption) => {
+   const filterByGroup = [...allTransactions];
+   const foodOption = filterByGroup.filter(
+      (transaction) => transaction.group === clickedOption
+   );
+   spinTransactionArray(foodOption);
+};
 
 // ? sort by A-Z
-console.log("sort A-Z:");
 const sortedByOrderAZ = [...allTransactions];
 let sortedAZ = sortedByOrderAZ.sort((a, b) => {
    let aToLow = a.group.toLowerCase();
    let bToLow = b.group.toLowerCase();
    return aToLow < bToLow ? 1 : -1;
 });
-console.log(sortedAZ);
+
+// filter button listener
+let filterClicked = false;
+let clickeOption = "";
+filter1.addEventListener("click", () => {
+   const groupFilter = document.querySelectorAll(".fill1-options");
+   showFilter1Modal();
+   groupFilter.forEach((btn) => {
+      btn.addEventListener("click", () => {
+         clickeOption = btn.innerText;
+         foodGroupSelected(clickeOption);
+         hideFilterModal();
+      });
+   });
+   // ? works for one click
+   // spinTransactionArray(foodOnly);
+
+   // ? example for more then one click
+   // if (filterClicked) {
+   //    spinTransactionArray(allTransactions);
+   //    filterClicked = false;
+   // } else {
+   //    spinTransactionArray(foodOnly);
+   //    filterClicked = true;
+   // }
+   // ? ------- ^
+});
+
+filter2.addEventListener("click", (e) => {
+   spinTransactionArray(sortedByOrderAZ);
+   // console.log(sortedAZ);
+});
+
+filter3.addEventListener("click", () => {
+   spinTransactionArray(allTransactions);
+   // console.log(sortedAZ);
+});
 
 // console.log("sort 0-9:");
 // ? sort by 0-9;
@@ -418,21 +464,3 @@ console.log(sortedAZ);
 // const sortItems =() => {
 //    const expenseItems =
 // }
-
-filter1.addEventListener("click", () => {
-   spinTransactionArray(foodOnly);
-   // spinTransactionArray(sortedByOrderAZ);
-   // console.log(sortedAZ);
-});
-
-filter2.addEventListener("click", () => {
-   // spinTransactionArray(foodOnly);
-   spinTransactionArray(sortedByOrderAZ);
-   // console.log(sortedAZ);
-});
-
-filter3.addEventListener("click", () => {
-   // spinTransactionArray(foodOnly);
-   spinTransactionArray(allTransactions);
-   // console.log(sortedAZ);
-});

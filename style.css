@@ -162,11 +162,6 @@
          shadow-blue-300/50;
 }
 
-/* hide class */
-.hide {
-   display: none;
-}
-
 .icon-del {
    @apply border-l
    m-2
@@ -186,8 +181,7 @@
    rounded
    shadow-xl
    w-2/3
-   lg:w-2/5
-   
+   lg:w-2/5   
    p-6
    bg-white
    absolute
@@ -201,10 +195,19 @@
    @apply fixed
    top-0
    left-0
-
    h-full
    w-full
    backdrop-blur-sm
+   z-10;
+}
+
+.add-transparent {
+   @apply fixed
+   top-0
+   left-0
+   h-full
+   w-full
+   /* backdrop-blur-sm */
    z-10;
 }
 
@@ -247,4 +250,34 @@
    @apply opacity-25
    cursor-no-drop
    /* hover:disabled:opacity-25; */;
+}
+
+.fil1-modal {
+   @apply flex
+   border
+   rounded
+   m-6
+   mt-7
+   /* mt-6 */
+   /* p-4 */
+   flex-col
+   text-gray-700
+   text-left
+   items-start
+   bg-white
+   text-base
+   absolute
+   z-10;
+}
+
+.fill1-options {
+   @apply px-3
+   w-full
+   text-left
+   hover:bg-slate-100;
+}
+
+/* hide class */
+.hide {
+   display: none;
 }
