@@ -252,6 +252,12 @@
    /* hover:disabled:opacity-25; */;
 }
 
+.filter-op-25-2 {
+   @apply opacity-25
+   cursor-no-drop
+   /* hover:disabled:opacity-25; */;
+}
+
 .fil1-modal {
    @apply flex
    border

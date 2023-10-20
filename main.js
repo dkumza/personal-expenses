@@ -24,6 +24,9 @@ const closeModalX = document.querySelector(".exit-modal");
 // filter modals
 const filter1Modal = document.querySelector(".fil1-modal"); //1st element of filters
 const modalTrans = document.querySelector(".add-transparent");
+// filter var
+let filterClicked = false;
+let sortClicked = false;
 
 // total income and spent DOM variables
 const totIncome = document.querySelectorAll(".tot-income");
@@ -106,8 +109,6 @@ const checkFilterStatus = () => {
          ? filter.classList.remove("filter-op-25")
          : filter.classList.add("filter-op-25");
    });
-
-   filterReset.
 };
 
 function Transaction(group, amount, date) {
@@ -418,9 +419,9 @@ let sortedAZ = sortedByOrderAZ.sort((a, b) => {
 });
 
 // filter button listener
-let filterClicked = false;
-let clickeOption = "";
+
 filter1.addEventListener("click", () => {
+   let clickeOption = "";
    const groupFilter = document.querySelectorAll(".fill1-options");
    showFilter1Modal();
    groupFilter.forEach((btn) => {
@@ -428,6 +429,9 @@ filter1.addEventListener("click", () => {
          clickeOption = btn.innerText;
          foodGroupSelected(clickeOption);
          hideFilterModal();
+         filterClicked = true;
+         checkFilterReset();
+         checkFilterStatus();
       });
    });
    // ? works for one click
@@ -444,15 +448,38 @@ filter1.addEventListener("click", () => {
    // ? ------- ^
 });
 
-filter2.addEventListener("click", (e) => {
-   spinTransactionArray(sortedByOrderAZ);
-   // console.log(sortedAZ);
+// !filter 2
+// filter2.addEventListener("click", () => {
+//    spinTransactionArray(sortedByOrderAZ);
+//    // console.log(sortedAZ);
+// });
+// ? reset all filters
+filterReset.addEventListener("click", () => {
+   spinTransactionArray(allTransactions);
+   checkFilterReset();
 });
 
-filter3.addEventListener("click", () => {
-   spinTransactionArray(allTransactions);
+const checkFilterReset = () => {
+   // filterReset.addEventListener("click", () => {
+   filterClicked
+      ? (filterReset.classList.remove("filter-op-25-2"),
+        (filterClicked = false))
+      : (filterReset.classList.add("filter-op-25-2"),
+        spinTransactionArray(allTransactions),
+        (filterClicked = true));
+
+   // if (filterClicked) {
+   //    filterReset.classList.remove("filter-op-25-2");
+   //    filterClicked = false;
+   // } else {
+   //    filterReset.classList.add("filter-op-25-2");
+   //    spinTransactionArray(allTransactions);
+   //    filterClicked = true;
+   // }
+
    // console.log(sortedAZ);
-});
+   // });
+};
 
 // console.log("sort 0-9:");
 // ? sort by 0-9;

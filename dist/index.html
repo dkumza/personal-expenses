@@ -13,14 +13,15 @@
    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/datepicker.min.js"></script> -->
    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" />
    <title>Expenses Tracker</title>
-  <script type="module" crossorigin src="/personal-expenses/assets/index-e6ba3e65.js"></script>
-  <link rel="stylesheet" href="/personal-expenses/assets/index-de23a951.css">
+  <script type="module" crossorigin src="/personal-expenses/assets/index-12872561.js"></script>
+  <link rel="stylesheet" href="/personal-expenses/assets/index-b2b7212a.css">
 </head>
 
 <body>
    <div class="main-container">
       <!-- blur modal -->
       <div class="add-blur hide"></div>
+      <div class="add-transparent hide"></div>
       <div class="left-wrap">
          <div class="balance-wrap text-left leading-3 mx-3">
             <h1 class="balance-big text-3xl">0 EUR</h1>
@@ -52,10 +53,22 @@
          <div class="history-wrap">
             <div class="h-t flex justify-between my-2 mx-6">
                <h2 class="">Transactions</h2>
+
+           
+
                <div class="filter-wrap">
-                  <button class="btn-f filter-1 filter-op-25"><i class="bi bi-funnel"></i></button>
+                  <div class="modal-filter-wrap flex relative">
+                     <button class="btn-f filter-1 filter-op-25"><i class="bi bi-funnel"></i> </button>
+                     <div class="fil1-modal hide">
+                        <button class="fill1-options">Food</button>
+                        <button class="fill1-options">Healthcare</button>
+                        <button class="fill1-options">Housing</button>
+                        <button class="fill1-options">Salary</button>
+                     </div>
+                  </div>
+                  
                   <button class="btn-f filter-2 filter-op-25"><i class="bi bi-sort-down"></i></button>
-                  <button class="btn-f filter-3 filter-op-25"><i class="bi bi-window-x"></i></button>
+                  <button class="btn-f filter-3 filter-op-25 filter-op-25-2"><i class="bi bi-window-x"></i></button>
                   <button class="btn-f filter-menu filter-op-25"><i class="bi bi-three-dots"></i></button>
                </div>
             </div>
