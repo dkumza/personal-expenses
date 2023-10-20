@@ -7,6 +7,13 @@ const expenseAmount = document.querySelector("#amount");
 const expenseDate = document.querySelector("#date");
 const submitBtn = document.querySelector(".btn-submit");
 const historyWrap = document.querySelector(".history");
+// filter btn selectors
+const filterButtons = document.querySelectorAll(".btn-f");
+const filter1 = document.querySelector(".filter-1");
+const filter2 = document.querySelector(".filter-2");
+const filter3 = document.querySelector(".filter-3");
+const filterMenu = document.querySelector(".filter-menu");
+// console.log(allFilter);
 
 // modal
 const modal = document.querySelector(".add-blur");
@@ -67,12 +74,12 @@ function createChart() {
 }
 
 // ! icon classes but doesnt work with Vite...
-// const iconClasses = {
-//    Food: ["bi", "bi-lightning-charge"],
-//    Healthcare: ["bi", "bi-balloon-heart"],
-//    Housing: ["bi", "bi-house-heart"],
-//    Salary: ["bi", "bi-cash-stack"],
-// };
+const iconClasses = {
+   Food: ["bi", "bi-lightning-charge"],
+   Healthcare: ["bi", "bi-balloon-heart"],
+   Housing: ["bi", "bi-house-heart"],
+   Salary: ["bi", "bi-cash-stack"],
+};
 
 // total income and spent variables
 let totalIncome = 0;
@@ -82,13 +89,26 @@ let totalExpense = 0;
 // ! dummy data... for testing
 let allTransactions = [
    { group: "Healthcare", amount: -400, date: "2023-10-09" },
-   { group: "Housing", amount: -600, date: "2023-10-10" },
-   { group: "Salary", amount: 4000, date: "2023-10-03" },
-   { group: "Healthcare", amount: -50, date: "2023-10-17" },
-   { group: "Food", amount: -600, date: "2023-10-17" },
-   { group: "Salary", amount: 1000, date: "2022-04-03" },
+   { group: "Housing", amount: -600, date: "2023-09-10" },
+   { group: "Salary", amount: 4000, date: "2023-08-03" },
+   { group: "Healthcare", amount: -50, date: "2023-07-17" },
+   { group: "Food", amount: -600, date: "2023-06-17" },
+   { group: "Salary", amount: 1000, date: "2023-05-03" },
 ];
 // console.log(allTransactions);
+// filter btn managment
+const checkFilterStatus = () => {
+   filterButtons.forEach((filter) => {
+      if (allTransactions.length > 1) {
+         // console.log(filterButtons);
+         filter.classList.remove("filter-op-25");
+      } else filter.classList.add("filter-op-25");
+      //    filter.addEventListener("click", (e) => {
+      //       console.log(e);
+      //    });
+      // }
+   });
+};
 
 function Transaction(group, amount, date) {
    this.group = group;
@@ -181,11 +201,12 @@ const addNewTransaction = () => {
 submitBtn.addEventListener("click", (e) => {
    e.preventDefault();
    addNewTransaction();
-   spinTransactionArray();
+   spinTransactionArray(allTransactions);
    sumTransactions();
    sumTotalSpent();
    updateTotals(totalIncome, totalExpense);
    updateBalance(totalIncome, totalExpense);
+   checkFilterStatus();
 
    // ? Update the chart with the new yLabel values
    yLabel = sumTransactions();
@@ -194,11 +215,11 @@ submitBtn.addEventListener("click", (e) => {
 });
 
 // * take each transaction from array and pass to createNewTransactionDOM
-const spinTransactionArray = () => {
+const spinTransactionArray = (array) => {
    const transactionRemove = document.querySelectorAll(".h-item");
    transactionRemove.forEach((item) => item.remove());
 
-   allTransactions.forEach((transaction) => {
+   array.forEach((transaction) => {
       createNewTransactionDOM(transaction);
    });
 };
@@ -288,6 +309,7 @@ const createNewTransactionDOM = (item) => {
       sumTotalSpent();
       updateTotals(totalIncome, totalExpense);
       updateBalance(totalIncome, totalExpense);
+      checkFilterStatus();
 
       // Save the updated allTransactions array to local storage
       localStorage.setItem("transactions", JSON.stringify(allTransactions));
@@ -332,15 +354,16 @@ const clearInputs = () => {
 };
 
 // *  Check if there are any transactions in local storage
-if (localStorage.getItem("transactions").length === 1) {
-   console.log(localStorage);
+if (localStorage.getItem("transactions").length >= 3) {
+   // console.log(localStorage);
    // Load transactions from local storage
    allTransactions = JSON.parse(localStorage.getItem("transactions"));
-   spinTransactionArray();
+   spinTransactionArray(allTransactions);
    sumTransactions();
    sumTotalSpent();
    updateTotals(totalIncome, totalExpense);
    updateBalance(totalIncome, totalExpense);
+   checkFilterStatus();
    if (allTransactions.length === 0) {
       yLabel = [1, 1, 1];
    }
@@ -348,17 +371,68 @@ if (localStorage.getItem("transactions").length === 1) {
    myChart.update();
 } else {
    // Initialize allTransactions as an empty array
-   // allTransactions = [
-   //    { group: "Healthcare", amount: -400, date: "2023-10-09" },
-   //    { group: "Housing", amount: -600, date: "2023-10-10" },
-   //    { group: "Salary", amount: 4000, date: "2023-10-03" },
-   //    { group: "Healthcare", amount: -50, date: "2023-10-17" },
-   //    { group: "Food", amount: -600, date: "2023-10-17" },
-   // ];
-   // addNewTransaction();
-   spinTransactionArray();
+   spinTransactionArray(allTransactions);
    sumTransactions();
    sumTotalSpent();
    updateTotals(totalIncome, totalExpense);
    updateBalance(totalIncome, totalExpense);
+   checkFilterStatus();
 }
+
+console.log("filter by group- Food:");
+// filter by group
+const filterByGroup = [...allTransactions];
+let foodOnly = filterByGroup.filter(
+   (transaction) => transaction.group === "Food"
+);
+
+console.log(foodOnly);
+// console.log(filterByGroup);
+
+// console.log(filterByGroup);
+
+// const healthcareExpenses = allTransactions.filter(
+//    (transaction) => transaction.group === "Healthcare"
+// );
+
+// console.log(foodExpenses);
+//  ! console.log(healthcareExpenses);
+
+// ? sort by A-Z
+console.log("sort A-Z:");
+const sortedByOrderAZ = [...allTransactions];
+let sortedAZ = sortedByOrderAZ.sort((a, b) => {
+   let aToLow = a.group.toLowerCase();
+   let bToLow = b.group.toLowerCase();
+   return aToLow < bToLow ? 1 : -1;
+});
+console.log(sortedAZ);
+
+// console.log("sort 0-9:");
+// ? sort by 0-9;
+// const sort09 = allTransactions.sort((a, b) => a.amount - b.amount);
+// console.log(sort09);
+
+// filter1.addEventListener("click", sortAZ);
+
+// const sortItems =() => {
+//    const expenseItems =
+// }
+
+filter1.addEventListener("click", () => {
+   spinTransactionArray(foodOnly);
+   // spinTransactionArray(sortedByOrderAZ);
+   // console.log(sortedAZ);
+});
+
+filter2.addEventListener("click", () => {
+   // spinTransactionArray(foodOnly);
+   spinTransactionArray(sortedByOrderAZ);
+   // console.log(sortedAZ);
+});
+
+filter3.addEventListener("click", () => {
+   // spinTransactionArray(foodOnly);
+   spinTransactionArray(allTransactions);
+   // console.log(sortedAZ);
+});
