@@ -13,8 +13,8 @@
    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/datepicker.min.js"></script> -->
    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" />
    <title>Expenses Tracker</title>
-  <script type="module" crossorigin src="/personal-expenses/assets/index-1a3bfde5.js"></script>
-  <link rel="stylesheet" href="/personal-expenses/assets/index-4a837223.css">
+  <script type="module" crossorigin src="/personal-expenses/assets/index-18ec4a29.js"></script>
+  <link rel="stylesheet" href="/personal-expenses/assets/index-dc8017f9.css">
 </head>
 
 <body>
@@ -22,7 +22,7 @@
       <!-- blur modal -->
       <div class="add-blur hide"></div>
       <div class="left-wrap">
-         <div class="balance-wrap text-left leading-3">
+         <div class="balance-wrap text-left leading-3 mx-3">
             <h1 class="balance-big text-3xl">0 EUR</h1>
             <p class="small-txt">Balance</p>
          </div>
@@ -50,7 +50,14 @@
          </div>
          <!-- history container -->
          <div class="history-wrap">
-            <h2>Transactions</h2>
+            <div class="h-t flex justify-between my-2 mx-6">
+               <h2 class="">Transactions</h2>
+               <div class="filter-wrap">
+                  <button class="filter-1 filter-op-25"><i class="bi bi-funnel"></i></button>
+                  <button class="filter-2 filter-op-25"><i class="bi bi-window-x"></i></button>
+                  <button class="filter-3 filter-op-25"><i class="bi bi-three-dots"></i></button>
+               </div>
+            </div>
             <!-- history item -->
             <ul class="history">
                <!-- here goes all transactions -->

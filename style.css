@@ -17,6 +17,8 @@
           lg:mx-auto 
           lg:shadow-xl
           lg:m-4  
+          m-4
+          mt-6
           text-xl   
           mx-auto 
           text-gray-700
@@ -47,7 +49,8 @@
 .inc-exp-wrap {
    @apply flex
    place-content-between
-   gap-2;
+   gap-2
+   px-2;
 }
 
 .income-wrap,
@@ -139,7 +142,11 @@
 .history {
    @apply flex
    flex-col
-   gap-3;
+   gap-3
+   /* h-80 */
+   /* max-h-1 */
+   overflow-auto
+   p-1;
 }
 
 .h-item {
@@ -179,7 +186,7 @@
    rounded
    shadow-xl
    w-2/3
-   lg:w-1/2
+   lg:w-2/5
    
    p-6
    bg-white
@@ -212,7 +219,8 @@
    rounded
    p-4
    shadow
-   shadow-blue-200;
+   shadow-blue-200
+   mx-4;
 }
 
 .inc-w {
@@ -222,9 +230,21 @@
    p-4
    rounded
    shadow
-   shadow-blue-200;
+   shadow-blue-200
+   mx-4;
 }
 .history {
    max-height: 400px; /* Set a maximum height for the container */
    /* overflow: hidden;  */
+}
+
+.filter-wrap {
+   @apply flex
+   gap-4;
+}
+
+.filter-op-25 {
+   @apply opacity-25
+   cursor-no-drop
+   /* hover:disabled:opacity-25; */;
 }
