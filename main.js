@@ -403,20 +403,21 @@ if (localStorage.getItem("transactions").length >= 3) {
 // ! console.log("filter by group- Food:");
 // * filter by group
 let foodGroupSelected = (clickedOption) => {
-   const filterByGroup = [...allTransactions];
-   const foodOption = filterByGroup.filter(
+   const foodOption = [...allTransactions].filter(
       (transaction) => transaction.group === clickedOption
    );
    spinTransactionArray(foodOption);
 };
 
 // ? sort by A-Z
-const sortedByOrderAZ = [...allTransactions];
-let sortedAZ = sortedByOrderAZ.sort((a, b) => {
-   let aToLow = a.group.toLowerCase();
-   let bToLow = b.group.toLowerCase();
-   return aToLow < bToLow ? 1 : -1;
-});
+const sortedAZ = [...allTransactions].sort((a, b) =>
+   a.group.toLowerCase() < b.group.toLowerCase() ? 1 : -1
+);
+// const sortedAZ = [...allTransactions].sort((a, b) => {
+//    let aToLow = a.group.toLowerCase();
+//    let bToLow = b.group.toLowerCase();
+//    return aToLow < bToLow ? 1 : -1;
+// });
 
 // filter button listener
 
@@ -434,25 +435,13 @@ filter1.addEventListener("click", () => {
          checkFilterStatus();
       });
    });
-   // ? works for one click
-   // spinTransactionArray(foodOnly);
-
-   // ? example for more then one click
-   // if (filterClicked) {
-   //    spinTransactionArray(allTransactions);
-   //    filterClicked = false;
-   // } else {
-   //    spinTransactionArray(foodOnly);
-   //    filterClicked = true;
-   // }
-   // ? ------- ^
 });
 
 // !filter 2
-// filter2.addEventListener("click", () => {
-//    spinTransactionArray(sortedByOrderAZ);
-//    // console.log(sortedAZ);
-// });
+filter2.addEventListener("click", () => {
+   spinTransactionArray(sortedAZ);
+   // console.log(sortedAZ);
+});
 // ? reset all filters
 filterReset.addEventListener("click", () => {
    spinTransactionArray(allTransactions);
