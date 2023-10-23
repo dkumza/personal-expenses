@@ -7,6 +7,13 @@ const expenseAmount = document.querySelector("#amount");
 const expenseDate = document.querySelector("#date");
 const submitBtn = document.querySelector(".btn-submit");
 const historyWrap = document.querySelector(".history");
+// filter btn selectors
+const filterButtons = document.querySelectorAll(".btn-f");
+const filter1 = document.querySelector(".filter-1");
+const filter2 = document.querySelector(".filter-2");
+const filter2_2 = document.querySelector(".filter-4");
+const filterReset = document.querySelector(".filter-3");
+const filterMenu = document.querySelector(".filter-menu");
 
 // modal
 const modal = document.querySelector(".add-blur");
@@ -14,6 +21,12 @@ const transactionBtn = document.querySelector(".btn");
 const transactionWrap = document.querySelector(".transaction-wrap");
 const addTransaction = document.querySelector(".add-transactions");
 const closeModalX = document.querySelector(".exit-modal");
+// filter modals
+const filter1Modal = document.querySelector(".fil1-modal"); //1st element of filters
+const modalTrans = document.querySelector(".add-transparent");
+// filter var
+let filterClicked = false;
+let sortClicked = false;
 
 // total income and spent DOM variables
 const totIncome = document.querySelectorAll(".tot-income");
@@ -67,12 +80,12 @@ function createChart() {
 }
 
 // ! icon classes but doesnt work with Vite...
-// const iconClasses = {
-//    Food: ["bi", "bi-lightning-charge"],
-//    Healthcare: ["bi", "bi-balloon-heart"],
-//    Housing: ["bi", "bi-house-heart"],
-//    Salary: ["bi", "bi-cash-stack"],
-// };
+const iconClasses = {
+   Food: ["bi", "bi-lightning-charge"],
+   Healthcare: ["bi", "bi-balloon-heart"],
+   Housing: ["bi", "bi-house-heart"],
+   Salary: ["bi", "bi-cash-stack"],
+};
 
 // total income and spent variables
 let totalIncome = 0;
@@ -81,14 +94,33 @@ let totalExpense = 0;
 // let allTransactions = [];
 // ! dummy data... for testing
 let allTransactions = [
-   { group: "Healthcare", amount: -400, date: "2023-10-09" },
-   { group: "Housing", amount: -600, date: "2023-10-10" },
-   { group: "Salary", amount: 4000, date: "2023-10-03" },
-   { group: "Healthcare", amount: -50, date: "2023-10-17" },
-   { group: "Food", amount: -600, date: "2023-10-17" },
-   { group: "Salary", amount: 1000, date: "2022-04-03" },
+   { group: "Healthcare", amount: -750, date: "2024-01-12" },
+   { group: "Housing", amount: -300, date: "2024-02-23" },
+   { group: "Salary", amount: 300, date: "2024-03-15" },
+   { group: "Healthcare", amount: -100, date: "2024-04-07" },
+   { group: "Food", amount: -250, date: "2024-05-19" },
+   { group: "Salary", amount: 100, date: "2024-06-21" },
+   { group: "Healthcare", amount: -500, date: "2024-07-03" },
+   { group: "Housing", amount: -40, date: "2024-08-14" },
+   { group: "Salary", amount: 6000, date: "2024-09-25" },
+   { group: "Healthcare", amount: -75, date: "2024-10-06" },
+   { group: "Food", amount: -50, date: "2024-11-17" },
+   { group: "Salary", amount: 5000, date: "2024-12-28" },
+   { group: "Healthcare", amount: -10, date: "2025-01-09" },
+   { group: "Housing", amount: -100, date: "2025-02-20" },
+   { group: "Salary", amount: 4000, date: "2025-03-12" },
+   { group: "Healthcare", amount: -50, date: "2025-04-23" },
+   { group: "Food", amount: -175, date: "2025-05-04" },
+   { group: "Salary", amount: 3000, date: "2025-06-15" },
 ];
-// console.log(allTransactions);
+// filter btn managment
+const checkFilterStatus = () => {
+   filterButtons.forEach((filter) => {
+      allTransactions.length > 1
+         ? filter.classList.remove("filter-op-25")
+         : filter.classList.add("filter-op-25");
+   });
+};
 
 function Transaction(group, amount, date) {
    this.group = group;
@@ -181,11 +213,12 @@ const addNewTransaction = () => {
 submitBtn.addEventListener("click", (e) => {
    e.preventDefault();
    addNewTransaction();
-   spinTransactionArray();
+   spinTransactionArray(allTransactions);
    sumTransactions();
    sumTotalSpent();
    updateTotals(totalIncome, totalExpense);
    updateBalance(totalIncome, totalExpense);
+   checkFilterStatus();
 
    // ? Update the chart with the new yLabel values
    yLabel = sumTransactions();
@@ -194,11 +227,11 @@ submitBtn.addEventListener("click", (e) => {
 });
 
 // * take each transaction from array and pass to createNewTransactionDOM
-const spinTransactionArray = () => {
+const spinTransactionArray = (array) => {
    const transactionRemove = document.querySelectorAll(".h-item");
    transactionRemove.forEach((item) => item.remove());
 
-   allTransactions.forEach((transaction) => {
+   array.forEach((transaction) => {
       createNewTransactionDOM(transaction);
    });
 };
@@ -288,6 +321,7 @@ const createNewTransactionDOM = (item) => {
       sumTotalSpent();
       updateTotals(totalIncome, totalExpense);
       updateBalance(totalIncome, totalExpense);
+      checkFilterStatus();
 
       // Save the updated allTransactions array to local storage
       localStorage.setItem("transactions", JSON.stringify(allTransactions));
@@ -318,6 +352,8 @@ transactionBtn.addEventListener("click", () => {
    transactionWrap.classList.remove("hide");
 });
 
+// ? to hide modals
+
 const closeModal = () => {
    modal.classList.add("hide");
    addTransaction.classList.add("hide");
@@ -326,39 +362,143 @@ const closeModal = () => {
 modal.addEventListener("click", closeModal);
 closeModalX.addEventListener("click", closeModal);
 
+const showFilter1Modal = () => {
+   filter1Modal.classList.remove("hide");
+   modalTrans.classList.remove("hide");
+};
+const hideFilterModal = () => {
+   modalTrans.classList.add("hide");
+   filter1Modal.classList.add("hide");
+};
+
+modalTrans.addEventListener("click", hideFilterModal);
+
 // * clear input values
 const clearInputs = () => {
    inputs.forEach((input) => (input.value = ""));
 };
 
 // *  Check if there are any transactions in local storage
-if (localStorage.getItem("transactions").length === 1) {
-   console.log(localStorage);
+if (localStorage.getItem("transactions").length >= 3) {
    // Load transactions from local storage
    allTransactions = JSON.parse(localStorage.getItem("transactions"));
-   spinTransactionArray();
+   spinTransactionArray(allTransactions);
    sumTransactions();
    sumTotalSpent();
    updateTotals(totalIncome, totalExpense);
    updateBalance(totalIncome, totalExpense);
+   checkFilterStatus();
    if (allTransactions.length === 0) {
       yLabel = [1, 1, 1];
+      myChart.data.datasets[0].data = yLabel;
+      myChart.update();
    }
-   myChart.data.datasets[0].data = yLabel;
-   myChart.update();
 } else {
-   // Initialize allTransactions as an empty array
-   // allTransactions = [
-   //    { group: "Healthcare", amount: -400, date: "2023-10-09" },
-   //    { group: "Housing", amount: -600, date: "2023-10-10" },
-   //    { group: "Salary", amount: 4000, date: "2023-10-03" },
-   //    { group: "Healthcare", amount: -50, date: "2023-10-17" },
-   //    { group: "Food", amount: -600, date: "2023-10-17" },
-   // ];
-   // addNewTransaction();
-   spinTransactionArray();
-   sumTransactions();
+   // Initialize allTransactions from dymmy array
+   spinTransactionArray(allTransactions);
    sumTotalSpent();
    updateTotals(totalIncome, totalExpense);
    updateBalance(totalIncome, totalExpense);
+   checkFilterStatus();
+   yLabel = sumTransactions();
+   myChart.data.datasets[0].data = yLabel;
+   myChart.update();
 }
+
+// * filter by group
+let foodOption = [];
+let foodGroupSelected = (clickedOption) => {
+   foodOption = [...allTransactions].filter(
+      (transaction) => transaction.group === clickedOption
+   );
+   spinTransactionArray(foodOption);
+   return foodOption;
+};
+
+// ? sort by A-Z
+const sortedAZ = [...allTransactions].sort((a, b) =>
+   a.group.toLowerCase() < b.group.toLowerCase() ? 1 : -1
+);
+
+// ? sort 0-9
+const sorted09 = [...allTransactions].sort((a, b) => a.amount - b.amount);
+
+// filter button listener
+let foodOptionSelected = false;
+let clickedOption = "";
+filter1.addEventListener("click", () => {
+   const groupFilter = document.querySelectorAll(".fill1-options");
+   showFilter1Modal();
+   groupFilter.forEach((btn) => {
+      btn.addEventListener("click", () => {
+         filter1.classList.add("text-blue-600");
+         filter2_2.classList.remove("text-blue-600");
+         clickedOption = btn.innerText;
+         foodGroupSelected(clickedOption);
+         hideFilterModal();
+         filterClicked = true;
+         foodOptionSelected = false;
+         checkFilterReset();
+         checkFilterStatus();
+         checkAzFilter();
+      });
+   });
+});
+
+// !filter 2 for A-Z sort
+filter2.addEventListener("click", () => {
+   foodOptionSelected
+      ? null
+      : (spinTransactionArray(sortedAZ),
+        filter2.classList.add("text-blue-600"),
+        (filterClicked = true),
+        filter2_2.classList.remove("text-blue-600"),
+        checkFilterReset());
+});
+
+// !filter 2-2 for 1-9 sort
+let filter09 = false;
+filter2_2.addEventListener("click", () => {
+   if (foodOption.length < 2) {
+      spinTransactionArray(sorted09);
+      filter2_2.classList.add("text-blue-600");
+      filter09 = true;
+      filterClicked = true;
+      checkFilterReset();
+   } else {
+      const sorted09Short = [...foodOption].sort((a, b) => a.amount - b.amount);
+      spinTransactionArray(sorted09Short);
+      filter2_2.classList.add("text-blue-600");
+      filter09 = true;
+      filterClicked = true;
+      checkFilterReset();
+   }
+});
+
+// ? reset all filters
+filterReset.addEventListener("click", () => {
+   spinTransactionArray(allTransactions);
+   filterClicked = false;
+   foodOptionSelected = true;
+   filter1.classList.remove("text-blue-600");
+   filter2.classList.remove("text-blue-600");
+   filter2_2.classList.remove("text-blue-600");
+   checkFilterReset();
+   checkAzFilter();
+});
+
+const checkFilterReset = () => {
+   filterClicked
+      ? (filterReset.classList.remove("filter-op-25-2"),
+        (filterClicked = false))
+      : (filterReset.classList.add("filter-op-25-2"),
+        spinTransactionArray(allTransactions),
+        (filterClicked = true));
+};
+
+const checkAzFilter = () => {
+   foodOptionSelected
+      ? (filter2.classList.remove("filter-op-25-2"),
+        (foodOptionSelected = false))
+      : (filter2.classList.add("filter-op-25-2"), (foodOptionSelected = true));
+};
