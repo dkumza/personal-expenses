@@ -25,6 +25,8 @@ Or simply you can check already prebuilded version online - [HERE](https://dkumz
 -   View balance
 -   View total income and expenses
 -   View expenses by category in a chart (do not shows salary)
+-   Sort transactions
+-   Filter transactions
 
 ## Technologies Used
 
