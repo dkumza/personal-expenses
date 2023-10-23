@@ -11,9 +11,9 @@ const historyWrap = document.querySelector(".history");
 const filterButtons = document.querySelectorAll(".btn-f");
 const filter1 = document.querySelector(".filter-1");
 const filter2 = document.querySelector(".filter-2");
+const filter2_2 = document.querySelector(".filter-4");
 const filterReset = document.querySelector(".filter-3");
 const filterMenu = document.querySelector(".filter-menu");
-// console.log(allFilter);
 
 // modal
 const modal = document.querySelector(".add-blur");
@@ -94,14 +94,25 @@ let totalExpense = 0;
 // let allTransactions = [];
 // ! dummy data... for testing
 let allTransactions = [
-   { group: "Healthcare", amount: -400, date: "2023-10-09" },
-   { group: "Housing", amount: -600, date: "2023-09-10" },
-   { group: "Salary", amount: 4000, date: "2023-08-03" },
-   { group: "Healthcare", amount: -50, date: "2023-07-17" },
-   { group: "Food", amount: -600, date: "2023-06-17" },
-   { group: "Salary", amount: 1000, date: "2023-05-03" },
+   { group: "Healthcare", amount: -750, date: "2024-01-12" },
+   { group: "Housing", amount: -300, date: "2024-02-23" },
+   { group: "Salary", amount: 300, date: "2024-03-15" },
+   { group: "Healthcare", amount: -100, date: "2024-04-07" },
+   { group: "Food", amount: -250, date: "2024-05-19" },
+   { group: "Salary", amount: 100, date: "2024-06-21" },
+   { group: "Healthcare", amount: -500, date: "2024-07-03" },
+   { group: "Housing", amount: -40, date: "2024-08-14" },
+   { group: "Salary", amount: 6000, date: "2024-09-25" },
+   { group: "Healthcare", amount: -75, date: "2024-10-06" },
+   { group: "Food", amount: -50, date: "2024-11-17" },
+   { group: "Salary", amount: 5000, date: "2024-12-28" },
+   { group: "Healthcare", amount: -10, date: "2025-01-09" },
+   { group: "Housing", amount: -100, date: "2025-02-20" },
+   { group: "Salary", amount: 4000, date: "2025-03-12" },
+   { group: "Healthcare", amount: -50, date: "2025-04-23" },
+   { group: "Food", amount: -175, date: "2025-05-04" },
+   { group: "Salary", amount: 3000, date: "2025-06-15" },
 ];
-// console.log(allTransactions);
 // filter btn managment
 const checkFilterStatus = () => {
    filterButtons.forEach((filter) => {
@@ -341,13 +352,6 @@ transactionBtn.addEventListener("click", () => {
    transactionWrap.classList.remove("hide");
 });
 
-// ? modal for filters
-// filterButtons.addEventListener("click", () => {
-//    console.log("clicked filter icon");
-//    // filter1Modal.classList.remove("hide");
-//    // transactionWrap.classList.remove("hide");
-// });
-
 // ? to hide modals
 
 const closeModal = () => {
@@ -376,7 +380,6 @@ const clearInputs = () => {
 
 // *  Check if there are any transactions in local storage
 if (localStorage.getItem("transactions").length >= 3) {
-   // console.log(localStorage);
    // Load transactions from local storage
    allTransactions = JSON.parse(localStorage.getItem("transactions"));
    spinTransactionArray(allTransactions);
@@ -387,96 +390,115 @@ if (localStorage.getItem("transactions").length >= 3) {
    checkFilterStatus();
    if (allTransactions.length === 0) {
       yLabel = [1, 1, 1];
+      myChart.data.datasets[0].data = yLabel;
+      myChart.update();
    }
-   myChart.data.datasets[0].data = yLabel;
-   myChart.update();
 } else {
-   // Initialize allTransactions as an empty array
+   // Initialize allTransactions from dymmy array
    spinTransactionArray(allTransactions);
-   sumTransactions();
    sumTotalSpent();
    updateTotals(totalIncome, totalExpense);
    updateBalance(totalIncome, totalExpense);
    checkFilterStatus();
+   yLabel = sumTransactions();
+   myChart.data.datasets[0].data = yLabel;
+   myChart.update();
 }
 
-// ! console.log("filter by group- Food:");
 // * filter by group
+let foodOption = [];
 let foodGroupSelected = (clickedOption) => {
-   const foodOption = [...allTransactions].filter(
+   foodOption = [...allTransactions].filter(
       (transaction) => transaction.group === clickedOption
    );
    spinTransactionArray(foodOption);
+   return foodOption;
 };
 
 // ? sort by A-Z
 const sortedAZ = [...allTransactions].sort((a, b) =>
    a.group.toLowerCase() < b.group.toLowerCase() ? 1 : -1
 );
-// const sortedAZ = [...allTransactions].sort((a, b) => {
-//    let aToLow = a.group.toLowerCase();
-//    let bToLow = b.group.toLowerCase();
-//    return aToLow < bToLow ? 1 : -1;
-// });
+
+// ? sort 0-9
+const sorted09 = [...allTransactions].sort((a, b) => a.amount - b.amount);
 
 // filter button listener
-
+let foodOptionSelected = false;
+let clickedOption = "";
 filter1.addEventListener("click", () => {
-   let clickeOption = "";
    const groupFilter = document.querySelectorAll(".fill1-options");
    showFilter1Modal();
    groupFilter.forEach((btn) => {
       btn.addEventListener("click", () => {
-         clickeOption = btn.innerText;
-         foodGroupSelected(clickeOption);
+         filter1.classList.add("text-blue-600");
+         filter2_2.classList.remove("text-blue-600");
+         clickedOption = btn.innerText;
+         foodGroupSelected(clickedOption);
          hideFilterModal();
          filterClicked = true;
+         foodOptionSelected = false;
          checkFilterReset();
          checkFilterStatus();
+         checkAzFilter();
       });
    });
 });
 
-// !filter 2
+// !filter 2 for A-Z sort
 filter2.addEventListener("click", () => {
-   spinTransactionArray(sortedAZ);
-   // console.log(sortedAZ);
+   foodOptionSelected
+      ? null
+      : (spinTransactionArray(sortedAZ),
+        filter2.classList.add("text-blue-600"),
+        (filterClicked = true),
+        filter2_2.classList.remove("text-blue-600"),
+        checkFilterReset());
 });
+
+// !filter 2-2 for 1-9 sort
+let filter09 = false;
+filter2_2.addEventListener("click", () => {
+   if (foodOption.length < 2) {
+      spinTransactionArray(sorted09);
+      filter2_2.classList.add("text-blue-600");
+      filter09 = true;
+      filterClicked = true;
+      checkFilterReset();
+   } else {
+      const sorted09Short = [...foodOption].sort((a, b) => a.amount - b.amount);
+      spinTransactionArray(sorted09Short);
+      filter2_2.classList.add("text-blue-600");
+      filter09 = true;
+      filterClicked = true;
+      checkFilterReset();
+   }
+});
+
 // ? reset all filters
 filterReset.addEventListener("click", () => {
    spinTransactionArray(allTransactions);
+   filterClicked = false;
+   foodOptionSelected = true;
+   filter1.classList.remove("text-blue-600");
+   filter2.classList.remove("text-blue-600");
+   filter2_2.classList.remove("text-blue-600");
    checkFilterReset();
+   checkAzFilter();
 });
 
 const checkFilterReset = () => {
-   // filterReset.addEventListener("click", () => {
    filterClicked
       ? (filterReset.classList.remove("filter-op-25-2"),
         (filterClicked = false))
       : (filterReset.classList.add("filter-op-25-2"),
         spinTransactionArray(allTransactions),
         (filterClicked = true));
-
-   // if (filterClicked) {
-   //    filterReset.classList.remove("filter-op-25-2");
-   //    filterClicked = false;
-   // } else {
-   //    filterReset.classList.add("filter-op-25-2");
-   //    spinTransactionArray(allTransactions);
-   //    filterClicked = true;
-   // }
-
-   // console.log(sortedAZ);
-   // });
 };
 
-// console.log("sort 0-9:");
-// ? sort by 0-9;
-// const sort09 = allTransactions.sort((a, b) => a.amount - b.amount);
-// console.log(sort09);
-
-// filter1.addEventListener("click", sortAZ);
-
-// const sortItems =() => {
-//    const expenseItems =
-// }
+const checkAzFilter = () => {
+   foodOptionSelected
+      ? (filter2.classList.remove("filter-op-25-2"),
+        (foodOptionSelected = false))
+      : (filter2.classList.add("filter-op-25-2"), (foodOptionSelected = true));
+};
