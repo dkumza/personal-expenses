@@ -462,6 +462,7 @@ filter2_2.addEventListener("click", () => {
    if (foodOption.length < 2) {
       spinTransactionArray(sorted09);
       filter2_2.classList.add("text-blue-600");
+      filter2.classList.remove("text-blue-600");
       filter09 = true;
       filterClicked = true;
       checkFilterReset();
@@ -469,6 +470,7 @@ filter2_2.addEventListener("click", () => {
       const sorted09Short = [...foodOption].sort((a, b) => a.amount - b.amount);
       spinTransactionArray(sorted09Short);
       filter2_2.classList.add("text-blue-600");
+      filter2.classList.remove("text-blue-600");
       filter09 = true;
       filterClicked = true;
       checkFilterReset();
