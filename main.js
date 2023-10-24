@@ -454,6 +454,9 @@ groupFilter.forEach((btn) => {
 filter2.addEventListener("click", () => {
    sortedAZ();
    spinTransactionArray(sortedAzArray);
+   setFilterStatus(filter2, sortedAzFilterOn);
+   filterClicked = false;
+   checkFilterReset();
 });
 
 // // !filter 2-2 for 1-9 sort
@@ -472,6 +475,8 @@ filterReset.addEventListener("click", () => {
    spinTransactionArray(allTransactions);
    foodOptionFilterOn = false;
    setFilterStatus(filter1, foodOptionFilterOn);
+   sortedAzFilterOn = false;
+   setFilterStatus(filter2, sortedAzFilterOn);
    filterClicked = true;
    checkFilterReset();
 });
