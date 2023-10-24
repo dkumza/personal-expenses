@@ -91,29 +91,30 @@ const iconClasses = {
 let totalIncome = 0;
 let totalExpense = 0;
 
-// let allTransactions = [];
+let allTransactions = [];
 // ! dummy data... for testing
-let allTransactions = [
-   { group: "Healthcare", amount: -750, date: "2024-01-12" },
-   { group: "Housing", amount: -300, date: "2024-02-23" },
-   { group: "Salary", amount: 300, date: "2024-03-15" },
-   { group: "Healthcare", amount: -100, date: "2024-04-07" },
-   { group: "Food", amount: -250, date: "2024-05-19" },
-   { group: "Salary", amount: 100, date: "2024-06-21" },
-   { group: "Healthcare", amount: -500, date: "2024-07-03" },
-   { group: "Housing", amount: -40, date: "2024-08-14" },
-   { group: "Salary", amount: 6000, date: "2024-09-25" },
-   { group: "Healthcare", amount: -75, date: "2024-10-06" },
-   { group: "Food", amount: -50, date: "2024-11-17" },
-   { group: "Salary", amount: 5000, date: "2024-12-28" },
-   { group: "Healthcare", amount: -10, date: "2025-01-09" },
-   { group: "Housing", amount: -100, date: "2025-02-20" },
-   { group: "Salary", amount: 4000, date: "2025-03-12" },
-   { group: "Healthcare", amount: -50, date: "2025-04-23" },
-   { group: "Food", amount: -175, date: "2025-05-04" },
-   { group: "Salary", amount: 3000, date: "2025-06-15" },
-];
-// filter btn managment
+// let allTransactions = [
+//    { group: "Healthcare", amount: -750, date: "2024-01-12" },
+//    { group: "Housing", amount: -300, date: "2024-02-23" },
+//    { group: "Salary", amount: 300, date: "2024-03-15" },
+//    { group: "Healthcare", amount: -100, date: "2024-04-07" },
+//    { group: "Food", amount: -250, date: "2024-05-19" },
+//    { group: "Salary", amount: 100, date: "2024-06-21" },
+//    { group: "Healthcare", amount: -500, date: "2024-07-03" },
+//    { group: "Housing", amount: -40, date: "2024-08-14" },
+//    { group: "Salary", amount: 6000, date: "2024-09-25" },
+//    { group: "Healthcare", amount: -75, date: "2024-10-06" },
+//    { group: "Food", amount: -50, date: "2024-11-17" },
+//    { group: "Salary", amount: 5000, date: "2024-12-28" },
+//    { group: "Healthcare", amount: -10, date: "2025-01-09" },
+//    { group: "Housing", amount: -100, date: "2025-02-20" },
+//    { group: "Salary", amount: 4000, date: "2025-03-12" },
+//    { group: "Healthcare", amount: -50, date: "2025-04-23" },
+//    { group: "Food", amount: -175, date: "2025-05-04" },
+//    { group: "Salary", amount: 3000, date: "2025-06-15" },
+// ];
+
+// * all filter status
 const checkFilterStatus = () => {
    filterButtons.forEach((filter) => {
       allTransactions.length > 1
@@ -317,19 +318,14 @@ const createNewTransactionDOM = (item) => {
    deleteIcon.addEventListener("click", () => {
       historyWrap.removeChild(transaction);
       allTransactions.splice(allTransactions.indexOf(item), 1);
-      sumTransactions();
+      yLabel = sumTransactions();
       sumTotalSpent();
       updateTotals(totalIncome, totalExpense);
       updateBalance(totalIncome, totalExpense);
       checkFilterStatus();
-
       // Save the updated allTransactions array to local storage
       localStorage.setItem("transactions", JSON.stringify(allTransactions));
-
       // ? Update the chart with the new yLabel values
-      if (allTransactions.length === 0) {
-         yLabel = [1, 1, 1];
-      }
       myChart.data.datasets[0].data = yLabel;
       myChart.update();
    });
@@ -379,128 +375,110 @@ const clearInputs = () => {
 };
 
 // *  Check if there are any transactions in local storage
-if (localStorage.getItem("transactions").length >= 3) {
-   // Load transactions from local storage
+// Load transactions from local storage
+if (localStorage.length < 1) {
+   spinTransactionArray(allTransactions);
+   yLabel = sumTransactions();
+   sumTotalSpent();
+   updateTotals(totalIncome, totalExpense);
+   updateBalance(totalIncome, totalExpense);
+   checkFilterStatus();
+   myChart.data.datasets[0].data = yLabel;
+   myChart.update();
+} else {
    allTransactions = JSON.parse(localStorage.getItem("transactions"));
    spinTransactionArray(allTransactions);
-   sumTransactions();
-   sumTotalSpent();
-   updateTotals(totalIncome, totalExpense);
-   updateBalance(totalIncome, totalExpense);
-   checkFilterStatus();
-   if (allTransactions.length === 0) {
-      yLabel = [1, 1, 1];
-      myChart.data.datasets[0].data = yLabel;
-      myChart.update();
-   }
-} else {
-   // Initialize allTransactions from dymmy array
-   spinTransactionArray(allTransactions);
-   sumTotalSpent();
-   updateTotals(totalIncome, totalExpense);
-   updateBalance(totalIncome, totalExpense);
-   checkFilterStatus();
    yLabel = sumTransactions();
+   sumTotalSpent();
+   updateTotals(totalIncome, totalExpense);
+   updateBalance(totalIncome, totalExpense);
+   checkFilterStatus();
    myChart.data.datasets[0].data = yLabel;
    myChart.update();
 }
 
 // * filter by group
+let foodOptionFilterOn = false;
 let foodOption = [];
 let foodGroupSelected = (clickedOption) => {
+   foodOptionFilterOn = true;
    foodOption = [...allTransactions].filter(
       (transaction) => transaction.group === clickedOption
    );
-   spinTransactionArray(foodOption);
-   return foodOption;
 };
 
 // ? sort by A-Z
-const sortedAZ = [...allTransactions].sort((a, b) =>
-   a.group.toLowerCase() < b.group.toLowerCase() ? 1 : -1
-);
+let sortedAzFilterOn = false;
+let sortedAzArray = [];
+const sortedAZ = () => {
+   sortedAzFilterOn = true;
+   console.table(allTransactions);
+   return (sortedAzArray = [...allTransactions].sort((a, b) =>
+      a.group.toLowerCase() < b.group.toLowerCase() ? 1 : -1
+   ));
+};
 
-// ? sort 0-9
-const sorted09 = [...allTransactions].sort((a, b) => a.amount - b.amount);
+//* sort 0-9
+let sorted09FilterOn = false;
+const sorted09 = () => {
+   sorted09FilterOn = true;
+   return [...allTransactions].sort((a, b) => a.amount - b.amount);
+};
 
-// filter button listener
-let foodOptionSelected = false;
-let clickedOption = "";
+//* filter1 button listener
 filter1.addEventListener("click", () => {
-   const groupFilter = document.querySelectorAll(".fill1-options");
    showFilter1Modal();
-   groupFilter.forEach((btn) => {
-      btn.addEventListener("click", () => {
-         filter1.classList.add("text-blue-600");
-         filter2_2.classList.remove("text-blue-600");
-         clickedOption = btn.innerText;
-         foodGroupSelected(clickedOption);
-         hideFilterModal();
-         filterClicked = true;
-         foodOptionSelected = false;
-         checkFilterReset();
-         checkFilterStatus();
-         checkAzFilter();
-      });
+});
+// * filter by selected filter1 modal option
+let clickedOption = "";
+const groupFilter = document.querySelectorAll(".fill1-options");
+groupFilter.forEach((btn) => {
+   btn.addEventListener("click", () => {
+      hideFilterModal();
+
+      clickedOption = btn.innerText;
+      foodGroupSelected(clickedOption);
+      spinTransactionArray(foodOption);
+
+      setFilterStatus(filter1, foodOptionFilterOn);
+      console.table(foodOption);
+
+      filterClicked = false;
+      // * check to activate or not filters
+      checkFilterReset();
+      checkFilterStatus();
    });
 });
 
-// !filter 2 for A-Z sort
+// * arrange array A-Z by pressing filter 2 icon
 filter2.addEventListener("click", () => {
-   foodOptionSelected
-      ? null
-      : (spinTransactionArray(sortedAZ),
-        filter2.classList.add("text-blue-600"),
-        (filterClicked = true),
-        filter2_2.classList.remove("text-blue-600"),
-        checkFilterReset());
+   sortedAZ();
+   spinTransactionArray(sortedAzArray);
 });
 
-// !filter 2-2 for 1-9 sort
-let filter09 = false;
-filter2_2.addEventListener("click", () => {
-   if (foodOption.length < 2) {
-      spinTransactionArray(sorted09);
-      filter2_2.classList.add("text-blue-600");
-      filter2.classList.remove("text-blue-600");
-      filter09 = true;
-      filterClicked = true;
-      checkFilterReset();
-   } else {
-      const sorted09Short = [...foodOption].sort((a, b) => a.amount - b.amount);
-      spinTransactionArray(sorted09Short);
-      filter2_2.classList.add("text-blue-600");
-      filter2.classList.remove("text-blue-600");
-      filter09 = true;
-      filterClicked = true;
-      checkFilterReset();
-   }
-});
+// // !filter 2-2 for 1-9 sort
+// let filter09 = false;
+// filter2_2.addEventListener("click", () => {});
 
-// ? reset all filters
-filterReset.addEventListener("click", () => {
-   spinTransactionArray(allTransactions);
-   filterClicked = false;
-   foodOptionSelected = true;
-   filter1.classList.remove("text-blue-600");
-   filter2.classList.remove("text-blue-600");
-   filter2_2.classList.remove("text-blue-600");
-   checkFilterReset();
-   checkAzFilter();
-});
-
-const checkFilterReset = () => {
-   filterClicked
-      ? (filterReset.classList.remove("filter-op-25-2"),
-        (filterClicked = false))
-      : (filterReset.classList.add("filter-op-25-2"),
-        spinTransactionArray(allTransactions),
-        (filterClicked = true));
+// * if filter is clicked add or remove class for blue color / selected option
+const setFilterStatus = (filter, filterOn) => {
+   filterOn
+      ? (filter.classList.add("text-blue-600"), (filterOn = false))
+      : (filter.classList.remove("text-blue-600"), (filterOn = true));
 };
 
-const checkAzFilter = () => {
-   foodOptionSelected
-      ? (filter2.classList.remove("filter-op-25-2"),
-        (foodOptionSelected = false))
-      : (filter2.classList.add("filter-op-25-2"), (foodOptionSelected = true));
+// *  on click resets all selected filters, and sets transactions array to default values entered by user
+filterReset.addEventListener("click", () => {
+   spinTransactionArray(allTransactions);
+   foodOptionFilterOn = false;
+   setFilterStatus(filter1, foodOptionFilterOn);
+   filterClicked = true;
+   checkFilterReset();
+});
+// * checks reset filter icon to be active or not
+const checkFilterReset = () => {
+   filterClicked
+      ? (filterReset.classList.add("filter-op-25-2"), (filterClicked = false))
+      : (filterReset.classList.remove("filter-op-25-2"),
+        (filterClicked = true));
 };
