@@ -18,7 +18,6 @@
           lg:shadow-xl
           lg:m-4  
           m-4
-          mt-6
           text-xl   
           mx-auto 
           text-gray-700
@@ -26,9 +25,7 @@
           lg:flex-row
           flex-col
           lg:rounded-b-lg
-          relative
-          pt-4
-          pb-4;
+          relative;
 }
 
 .left-wrap,
@@ -219,11 +216,14 @@
 
 .right-small-1 {
    @apply border
-   rounded
+   /* rounded */
    p-4
+   /* shadow
+   shadow-gray-300/50 */
    shadow
-   shadow-gray-300/50
-   mx-4;
+   shadow-gray-200/50
+   rounded-lg
+   mx-2;
 }
 
 .inc-w {
@@ -235,7 +235,7 @@
    rounded
    shadow
    shadow-gray-300/50
-   mx-4;
+   mx-2;
 }
 .history {
    max-height: 300px; /* Set a maximum height for the container */
