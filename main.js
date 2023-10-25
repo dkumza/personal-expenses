@@ -11,9 +11,9 @@ const historyWrap = document.querySelector(".history");
 const filterButtons = document.querySelectorAll(".btn-f");
 const filter1 = document.querySelector(".filter-1");
 const filter2 = document.querySelector(".filter-2");
-const filter2_2 = document.querySelector(".filter-4");
-const filterReset = document.querySelector(".filter-3");
-const filterMenu = document.querySelector(".filter-menu");
+const filter3 = document.querySelector(".filter-3");
+const filterReset = document.querySelector(".filter-4");
+// const filterMenu = document.querySelector(".filter-menu");
 
 // modal
 const modal = document.querySelector(".add-blur");
@@ -79,40 +79,11 @@ function createChart() {
    });
 }
 
-// ! icon classes but doesnt work with Vite...
-const iconClasses = {
-   Food: ["bi", "bi-lightning-charge"],
-   Healthcare: ["bi", "bi-balloon-heart"],
-   Housing: ["bi", "bi-house-heart"],
-   Salary: ["bi", "bi-cash-stack"],
-};
-
 // total income and spent variables
 let totalIncome = 0;
 let totalExpense = 0;
 
 let allTransactions = [];
-// ! dummy data... for testing
-// let allTransactions = [
-//    { group: "Healthcare", amount: -750, date: "2024-01-12" },
-//    { group: "Housing", amount: -300, date: "2024-02-23" },
-//    { group: "Salary", amount: 300, date: "2024-03-15" },
-//    { group: "Healthcare", amount: -100, date: "2024-04-07" },
-//    { group: "Food", amount: -250, date: "2024-05-19" },
-//    { group: "Salary", amount: 100, date: "2024-06-21" },
-//    { group: "Healthcare", amount: -500, date: "2024-07-03" },
-//    { group: "Housing", amount: -40, date: "2024-08-14" },
-//    { group: "Salary", amount: 6000, date: "2024-09-25" },
-//    { group: "Healthcare", amount: -75, date: "2024-10-06" },
-//    { group: "Food", amount: -50, date: "2024-11-17" },
-//    { group: "Salary", amount: 5000, date: "2024-12-28" },
-//    { group: "Healthcare", amount: -10, date: "2025-01-09" },
-//    { group: "Housing", amount: -100, date: "2025-02-20" },
-//    { group: "Salary", amount: 4000, date: "2025-03-12" },
-//    { group: "Healthcare", amount: -50, date: "2025-04-23" },
-//    { group: "Food", amount: -175, date: "2025-05-04" },
-//    { group: "Salary", amount: 3000, date: "2025-06-15" },
-// ];
 
 // * all filter status
 const checkFilterStatus = () => {
@@ -123,10 +94,20 @@ const checkFilterStatus = () => {
    });
 };
 
-function Transaction(group, amount, date) {
-   this.group = group;
-   this.amount = amount;
-   this.date = date;
+// * checks reset filter icon to be active or not
+const checkFilterReset = () => {
+   filterClicked
+      ? (filterReset.classList.add("filter-op-25-2"), (filterClicked = false))
+      : (filterReset.classList.remove("filter-op-25-2"),
+        (filterClicked = true));
+};
+
+class Transaction {
+   constructor(group, amount, date) {
+      this.group = group;
+      this.amount = amount;
+      this.date = date;
+   }
 }
 
 // * function to sum all transactions by group for chart js
@@ -220,11 +201,12 @@ submitBtn.addEventListener("click", (e) => {
    updateTotals(totalIncome, totalExpense);
    updateBalance(totalIncome, totalExpense);
    checkFilterStatus();
-
+   resetAllFilters();
    // ? Update the chart with the new yLabel values
    yLabel = sumTransactions();
    myChart.data.datasets[0].data = yLabel;
    myChart.update();
+   removeBlueStyle();
 });
 
 // * take each transaction from array and pass to createNewTransactionDOM
@@ -262,8 +244,6 @@ const createNewTransactionDOM = (item) => {
          icon.classList.add("bi", "bi-cash-stack");
          break;
    }
-   // ! doesnt work with Vite...
-   // icon.classList.add(...iconClasses[item.group]);
    // category wrapper
    const category = document.createElement("div");
    category.classList.add("category-item");
@@ -276,11 +256,9 @@ const createNewTransactionDOM = (item) => {
    // category amount wrapper
    const categoryAmount = document.createElement("div");
    // check if amount is positive or negative
-   if (item.group === "Salary") {
-      categoryAmount.classList.add("amount-item", "a-2");
-   } else {
-      categoryAmount.classList.add("amount-item", "a-1");
-   }
+   item.group === "Salary"
+      ? categoryAmount.classList.add("amount-item", "a-2")
+      : categoryAmount.classList.add("amount-item", "a-1");
    // category amount text - h3
    const categoryAmountText = document.createElement("h3");
    // delete icon wrapper
@@ -328,6 +306,7 @@ const createNewTransactionDOM = (item) => {
       // ? Update the chart with the new yLabel values
       myChart.data.datasets[0].data = yLabel;
       myChart.update();
+      removeBlueStyle();
    });
 };
 
@@ -397,35 +376,42 @@ if (localStorage.length < 1) {
    myChart.update();
 }
 
+// ! FILTERS AND SORTS:
+// ? variables for applied filter / sort buttons
+let groupFilterON = false;
+let sortedAzFilterOn = false;
+let sorted09FilterOn = false;
+let groupFilterEnable = false;
+let groupFilterFor09 = false;
+let filter09clicked = false;
+
 // * filter by group
-let foodOptionFilterOn = false;
-let foodOption = [];
-let foodGroupSelected = (clickedOption) => {
-   foodOptionFilterOn = true;
-   foodOption = [...allTransactions].filter(
+let groupOption = [];
+const groupSelected = (clickedOption) => {
+   groupFilterON = true;
+   groupOption = [...allTransactions].filter(
       (transaction) => transaction.group === clickedOption
    );
 };
 
-// ? sort by A-Z
-let sortedAzFilterOn = false;
+// * sort by A-Z
 let sortedAzArray = [];
 const sortedAZ = () => {
    sortedAzFilterOn = true;
-   console.table(allTransactions);
    return (sortedAzArray = [...allTransactions].sort((a, b) =>
       a.group.toLowerCase() < b.group.toLowerCase() ? 1 : -1
    ));
 };
 
 //* sort 0-9
-let sorted09FilterOn = false;
+let sorted09Array = [];
 const sorted09 = () => {
    sorted09FilterOn = true;
-   return [...allTransactions].sort((a, b) => a.amount - b.amount);
+   sorted09Array = [...allTransactions].sort((a, b) => a.amount - b.amount);
 };
 
-//* filter1 button listener
+// ! ALL FILTERS/SORT BUTTONS GOES HERE:
+// * filter1 button listener
 filter1.addEventListener("click", () => {
    showFilter1Modal();
 });
@@ -437,32 +423,62 @@ groupFilter.forEach((btn) => {
       hideFilterModal();
 
       clickedOption = btn.innerText;
-      foodGroupSelected(clickedOption);
-      spinTransactionArray(foodOption);
+      groupSelected(clickedOption);
+      spinTransactionArray(groupOption);
 
-      setFilterStatus(filter1, foodOptionFilterOn);
-      console.table(foodOption);
+      setFilterStatus(filter1, groupFilterON);
 
       filterClicked = false;
       // * check to activate or not filters
       checkFilterReset();
       checkFilterStatus();
+
+      groupFilterEnable = true;
+      disableAzButton();
+
+      groupFilterFor09 = true;
+
+      sorted09FilterOn = false;
+      setFilterStatus(filter3, sorted09FilterOn);
    });
 });
 
 // * arrange array A-Z by pressing filter 2 icon
 filter2.addEventListener("click", () => {
-   sortedAZ();
-   spinTransactionArray(sortedAzArray);
-   setFilterStatus(filter2, sortedAzFilterOn);
-   filterClicked = false;
-   checkFilterReset();
+   setFilterStatus(filter3, (sorted09FilterOn = false));
+   if (groupFilterEnable) {
+      sortedAZ();
+      spinTransactionArray(sortedAzArray);
+      setFilterStatus(filter2, sortedAzFilterOn);
+      filterClicked = false;
+      checkFilterReset();
+   }
+   return;
 });
 
-// // !filter 2-2 for 1-9 sort
-// let filter09 = false;
-// filter2_2.addEventListener("click", () => {});
+// * arrange array 9-1
+filter3.addEventListener("click", () => {
+   setFilterStatus(filter2, (sortedAzFilterOn = false));
 
+   if (groupFilterFor09) {
+      spinTransactionArray(
+         [...groupOption].sort((a, b) => a.amount - b.amount)
+      );
+      sorted09FilterOn = true;
+      setFilterStatus(filter3, sorted09FilterOn);
+      filterClicked = false;
+      checkFilterReset();
+   } else {
+      // filter09clicked = true;
+      sorted09();
+      spinTransactionArray(sorted09Array);
+      setFilterStatus(filter3, sorted09FilterOn);
+      filterClicked = false;
+      checkFilterReset();
+   }
+});
+
+// ! FILTER / SORT BUTTON LOGIC
 // * if filter is clicked add or remove class for blue color / selected option
 const setFilterStatus = (filter, filterOn) => {
    filterOn
@@ -470,20 +486,36 @@ const setFilterStatus = (filter, filterOn) => {
       : (filter.classList.remove("text-blue-600"), (filterOn = true));
 };
 
+// ? logic for sor a-z button, if filter by group is applied - disable sort a-z button
+const disableAzButton = () => {
+   if (groupFilterEnable) {
+      filter2.classList.add("filter-op-25-2");
+      groupFilterEnable = false;
+   } else {
+      filter2.classList.remove("filter-op-25-2");
+      groupFilterEnable = true;
+   }
+};
+
 // *  on click resets all selected filters, and sets transactions array to default values entered by user
 filterReset.addEventListener("click", () => {
    spinTransactionArray(allTransactions);
-   foodOptionFilterOn = false;
-   setFilterStatus(filter1, foodOptionFilterOn);
-   sortedAzFilterOn = false;
-   setFilterStatus(filter2, sortedAzFilterOn);
+   resetAllFilters();
+});
+
+const resetAllFilters = () => {
+   removeBlueStyle();
    filterClicked = true;
    checkFilterReset();
-});
-// * checks reset filter icon to be active or not
-const checkFilterReset = () => {
-   filterClicked
-      ? (filterReset.classList.add("filter-op-25-2"), (filterClicked = false))
-      : (filterReset.classList.remove("filter-op-25-2"),
-        (filterClicked = true));
+   groupFilterEnable = false;
+   disableAzButton();
+};
+
+const removeBlueStyle = () => {
+   groupFilterON = false;
+   setFilterStatus(filter1, groupFilterON);
+   sortedAzFilterOn = false;
+   setFilterStatus(filter2, sortedAzFilterOn);
+   sorted09FilterOn = false;
+   setFilterStatus(filter3, sorted09FilterOn);
 };
