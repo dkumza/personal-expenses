@@ -85,13 +85,49 @@ let totalExpense = 0;
 
 let allTransactions = [];
 
+let foodGroupCount = 0;
+let healthGroupCount = 0;
+let housingGroupCount = 0;
+let salaryGroupCount = 0;
+
+const countEachGroup = () => {
+   foodGroupCount = allTransactions.filter(
+      (transaction) => transaction.group === "Food"
+   ).length;
+   healthGroupCount = allTransactions.filter(
+      (transaction) => transaction.group === "Healthcare"
+   ).length;
+   housingGroupCount = allTransactions.filter(
+      (transaction) => transaction.group === "Housing"
+   ).length;
+   salaryGroupCount = allTransactions.filter(
+      (transaction) => transaction.group === "Salary"
+   ).length;
+
+   if (
+      (allTransactions.length > 1 && foodGroupCount > 1) ||
+      (allTransactions.length > 1 && healthGroupCount > 1) ||
+      (allTransactions.length > 1 && housingGroupCount > 1) ||
+      (allTransactions.length > 1 && salaryGroupCount > 1)
+   ) {
+      filter2.classList.add("filter-op-25");
+   } else {
+      filter2.classList.remove("filter-op-25");
+   }
+};
+
 // * all filter status
+//! if any of group items are less then 3, AZ filter should be disabled
+//! we need to check each group and then check that group length
 const checkFilterStatus = () => {
    filterButtons.forEach((filter) => {
-      allTransactions.length > 1
-         ? filter.classList.remove("filter-op-25")
-         : filter.classList.add("filter-op-25");
+      allTransactions.length < 2
+         ? filter.classList.add("filter-op-25")
+         : filter.classList.remove("filter-op-25");
    });
+   if (allTransactions.length > 1) {
+      countEachGroup();
+   }
 };
 
 // * checks reset filter icon to be active or not
@@ -407,7 +443,7 @@ const sortedAZ = () => {
 let sorted09Array = [];
 const sorted09 = () => {
    sorted09FilterOn = true;
-   sorted09Array = [...allTransactions].sort((a, b) => a.amount - b.amount);
+   sorted09Array = [...allTransactions].sort((a, b) => b.amount - a.amount);
 };
 
 // ! ALL FILTERS/SORT BUTTONS GOES HERE:
