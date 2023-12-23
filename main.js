@@ -391,16 +391,7 @@ const clearInputs = () => {
 
 // *  Check if there are any transactions in local storage
 // Load transactions from local storage
-if (localStorage.length < 1) {
-   spinTransactionArray(allTransactions);
-   yLabel = sumTransactions();
-   sumTotalSpent();
-   updateTotals(totalIncome, totalExpense);
-   updateBalance(totalIncome, totalExpense);
-   checkFilterStatus();
-   myChart.data.datasets[0].data = yLabel;
-   myChart.update();
-} else {
+if (localStorage.length > 0) {
    allTransactions = JSON.parse(localStorage.getItem("transactions"));
    spinTransactionArray(allTransactions);
    yLabel = sumTransactions();
